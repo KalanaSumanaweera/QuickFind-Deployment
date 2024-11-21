@@ -165,6 +165,11 @@ app.use(
 // Serve static files (frontend)
 app.use(express.static(path.join(__dirname, '../../frontend')));
 
+// Root route: Send the login page
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../frontend/pages/auth/login.html'));
+});
+
 // Middleware configurations
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -187,15 +192,10 @@ app.use(express.json()); // Parse JSON payloads
 app.use(passport.initialize());
 
 // Routes
-app.use('/home', pageRoutes); // Page-related routes
+app.use('/', pageRoutes); // Page-related routes
 app.use('/api/auth', authRoutes); // Authentication routes
 app.use('/api/service', serviceRoutes); // Service-related routes
 app.use('/api/categories', categoryRoutes); // Category-related routes
-
-// Root route
-app.get('/', (req, res) => {
-    res.send('Welcome to QuickFind!');
-});
 
 // 404 Handler for undefined routes
 app.use((req, res) => {
