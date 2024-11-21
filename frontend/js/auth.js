@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function isValidPhoneNumber(phone) {
-        return /^(0?77|0?76|0?74|0?71|0?72|0?75)\d{6,7}$/.test(phone);// For Sri Lankan numbers starting with 0 and 10 digits
+        return /^(0?77|0?76|0?74|0?71|0?72|0?75|0?78|0?79|0?70)\d{6,7}$/.test(phone);// For Sri Lankan numbers starting with 0 and 10 digits
     }
 
     function showAlert(title, text, icon) {
