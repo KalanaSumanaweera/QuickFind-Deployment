@@ -31,6 +31,10 @@ function validatePassword(password) {
 document.addEventListener("DOMContentLoaded", () => {
     const resetPasswordForm = document.getElementById("resetPasswordForm");
 
+    function showAlert(title, text, icon) {
+        Swal.fire({ title, text, icon });
+    }
+
     resetPasswordForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const params = new URLSearchParams(window.location.search);
@@ -40,28 +44,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Check if fields are filled
         if (!newPassword || !confirmPassword) {
-            alert("Please fill out all fields.");
+            showAlert("Missing Fields", "Please fill out all fields.", "warning");
             return;
         }
 
         // Check if passwords match
         if (newPassword !== confirmPassword) {
-            alert("Passwords do not match.");
+            showAlert("Password Mismatch", "Passwords do not match.", "warning");
             return;
         }
 
         // Validate password strength
         const validationErrors = validatePassword(newPassword);
         if (validationErrors.length > 0) {
-            Swal.fire({
-                title: validationErrors[0],
-                // text: "Please enter a valid 10-digit phone number.",
-                icon: "warning"
-            });
+            showAlert("Weak Password", validationErrors.join("\n"), "warning");
             return;
-
-            // alert(validationErrors.join("\n")); // Show validation errors
-            // return;
         }
 
         // Proceed with API call if validation passes
@@ -77,32 +74,19 @@ document.addEventListener("DOMContentLoaded", () => {
             const result = await response.json();
 
             if (response.ok) {
-                alert("Password has been reset successfully!");
-                window.location.href = "/loginpage";
+                Swal.fire({
+                    title: "Success",
+                    text: "Password has been reset successfully! Redirecting to login page.",
+                    icon: "success",
+                }).then(() => {
+                    window.location.href = "/loginpage";
+                });
             } else {
-                alert(result.message || "Failed to reset password. Please try again.");
+                showAlert("Error", result.message || "Failed to reset password. Please try again.", "error");
             }
-
-            // Optionally, use SweetAlert for better UI (uncomment if using Swal)
-            // if (response.ok) {
-            //     Swal.fire({
-            //         title: "Password has been reset successfully!",
-            //         text: "Please log in.",
-            //         icon: "success"
-            //     }).then(() => {
-            //         window.location.href = '/loginpage';
-            //     });
-            // } else {
-            //     Swal.fire({
-            //         title: "Failed to reset password. Please try again.",
-            //         text: result.message,
-            //         icon: "warning"
-            //     });
-            // }
-
         } catch (error) {
             console.error("Error:", error);
-            alert("An error occurred. Please try again.");
+            showAlert("Error", "An error occurred. Please try again.", "error");
         }
     });
 });
