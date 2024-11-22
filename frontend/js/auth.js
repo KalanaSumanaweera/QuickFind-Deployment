@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Disable the form and show loader (optional)
             forgotPasswordForm.querySelector("button").disabled = true;
 
-            const response = await fetch("http://localhost:3000/api/auth/request-password-reset", {
+            const response = await fetch("api/auth/request-password-reset", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
