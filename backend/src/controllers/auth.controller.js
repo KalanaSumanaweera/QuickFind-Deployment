@@ -77,7 +77,7 @@ exports.register = [
                 { expiresIn: '1d' }
             );
 
-            const verificationLink = ` api/auth/verify-email?token=${verificationToken}`;
+            const verificationLink = `api/auth/verify-email?token=${verificationToken}`;
             const mailOptions = {
                 from: config.email.from,
                 to: user.email,
