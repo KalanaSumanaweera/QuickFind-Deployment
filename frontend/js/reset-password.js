@@ -31,9 +31,9 @@ function validatePassword(password) {
 document.addEventListener("DOMContentLoaded", () => {
     const resetPasswordForm = document.getElementById("resetPasswordForm");
 
-    function showAlert(title, text, icon) {
-        Swal.fire({ title, text, icon });
-    }
+    // function alert(title, text, icon) {
+    //     Swal.fire({ title, text, icon });
+    // }
 
     resetPasswordForm.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -44,20 +44,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Check if fields are filled
         if (!newPassword || !confirmPassword) {
-            showAlert("Missing Fields", "Please fill out all fields.", "warning");
+            alert("Missing Fields", "Please fill out all fields.", "warning");
             return;
         }
 
         // Check if passwords match
         if (newPassword !== confirmPassword) {
-            showAlert("Password Mismatch", "Passwords do not match.", "warning");
+            alert("Password Mismatch", "Passwords do not match.", "warning");
             return;
         }
 
         // Validate password strength
         const validationErrors = validatePassword(newPassword);
         if (validationErrors.length > 0) {
-            showAlert("Weak Password", validationErrors.join("\n"), "warning");
+            alert("Weak Password", validationErrors.join("\n"), "warning");
             return;
         }
 
@@ -82,11 +82,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     window.location.href = "/loginpage";
                 });
             } else {
-                showAlert("Error", result.message || "Failed to reset password. Please try again.", "error");
+                alert("Error", result.message || "Failed to reset password. Please try again.", "error");
             }
         } catch (error) {
             console.error("Error:", error);
-            showAlert("Error", "An error occurred. Please try again.", "error");
+            alert("Error", "An error occurred. Please try again.", "error");
         }
     });
 });
