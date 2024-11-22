@@ -74,15 +74,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const result = await response.json();
 
             if (response.ok) {
-                Swal.fire({
-                    title: "Success",
-                    text: "Password has been reset successfully! Redirecting to login page.",
-                    icon: "success",
-                }).then(() => {
-                    window.location.href = "/loginpage";
-                });
+                alert("Password has been reset successfully!");
+                window.location.href = "/loginpage";
             } else {
-                alert("Error", result.message || "Failed to reset password. Please try again.", "error");
+                alert(result.message || "Failed to reset password. Please try again.");
             }
         } catch (error) {
             console.error("Error:", error);
