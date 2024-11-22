@@ -127,7 +127,7 @@ require('./models/associations');
 require('./config/passport')(passport);
 
 // Allowed origins for CORS
-const allowedOrigins = ['http://localhost:3000', 'http://127.0.0.1:5500'];
+const allowedOrigins = ['https://quickfind-38321514be2b.herokuapp.com', 'http://127.0.0.1:5500'];
 
 const app = express();
 
