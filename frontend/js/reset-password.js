@@ -53,8 +53,15 @@ document.addEventListener("DOMContentLoaded", () => {
         // Validate password strength
         const validationErrors = validatePassword(newPassword);
         if (validationErrors.length > 0) {
-            alert(validationErrors.join("\n")); // Show validation errors
+            Swal.fire({
+                title: validationErrors[0],
+                // text: "Please enter a valid 10-digit phone number.",
+                icon: "warning"
+            });
             return;
+
+            // alert(validationErrors.join("\n")); // Show validation errors
+            // return;
         }
 
         // Proceed with API call if validation passes
