@@ -275,6 +275,9 @@ exports.resetPassword = async (req, res) => {
     const { token, newPassword } = req.body;
     try {
         const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+        
+        console.log('Hashed Token:', hashedToken);
+
         const user = await User.findOne({
             where: { resetToken: hashedToken, resetTokenExpiry: { [Op.gt]: Date.now() } },
         });
@@ -283,14 +286,18 @@ exports.resetPassword = async (req, res) => {
             return res.status(400).json({ message: 'Invalid or expired token.' });
         }
 
+        console.log('User found:', user.id); // Log user details for debugging
+
         user.password = await bcrypt.hash(newPassword, 10);
         user.resetToken = null;
         user.resetTokenExpiry = null;
         await user.save();
 
+        console.log('Password updated successfully for user:', user.id);
+
         res.status(200).json({ message: 'Password updated successfully.' });
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error occurred:', error); // Log the full error object
         res.status(500).json({ message: 'An error occurred. Please try again.' });
     }
 };
