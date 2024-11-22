@@ -215,7 +215,7 @@ exports.requestPasswordReset = async (req, res) => {
         user.resetTokenExpiry = Date.now() + 3600000; // 1 hour
         await user.save();
 
-        const resetUrl = `http://localhost:3000/reset-passwordpage?token=${resetToken}`;
+        const resetUrl = `https://quickfind-38321514be2b.herokuapp.com/reset-passwordpage?token=${resetToken}`;
         await transporter.sendMail({
             from: `"QuickFind Support" <${config.email.from}>`,
             to: email,
