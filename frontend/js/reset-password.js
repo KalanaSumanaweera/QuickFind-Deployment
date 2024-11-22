@@ -29,28 +29,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const result = await response.json();
 
-            if (response.ok) {
-                alert("Password has been reset successfully!");
-                window.location.href = "/loginpage";
-            } else {
-                alert(result.message || "Failed to reset password. Please try again.");
-            }
-
             // if (response.ok) {
-            //     Swal.fire({
-            //         title: "Password has been reset successfully!",
-            //         text: "Please log in.",
-            //         icon: "success"
-            //     }).then(() => {
-            //         window.location.href = '/loginpage';
-            //     });
+            //     alert("Password has been reset successfully!");
+            //     window.location.href = "/loginpage";
             // } else {
-            //     Swal.fire({
-            //         title: "Failed to reset password. Please try again.",
-            //         text: data.message,
-            //         icon: "warning"
-            //     });
+            //     alert(result.message || "Failed to reset password. Please try again.");
             // }
+
+            if (response.ok) {
+                Swal.fire({
+                    title: "Password has been reset successfully!",
+                    text: "Please log in.",
+                    icon: "success"
+                }).then(() => {
+                    window.location.href = '/loginpage';
+                });
+            } else {
+                Swal.fire({
+                    title: "Failed to reset password. Please try again.",
+                    // text: data.message,
+                    icon: "warning"
+                });
+            }
 
         } catch (error) {
             console.error("Error:", error);
