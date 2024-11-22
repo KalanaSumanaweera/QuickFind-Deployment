@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (data.user.role == "customer") {
                             window.location.href = '/home';
                         } else if (data.user.role == "service_provider") {
-                            window.location.href = '../../pages/provider-dashboard.html';
+                            window.location.href = '/provider-dashboard';
                         }
                     });
                 } else {
