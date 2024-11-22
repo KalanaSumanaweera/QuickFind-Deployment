@@ -1,5 +1,5 @@
 // frontend/src/js/auth.js
-function gotoSignup(){
+function gotoSignup() {
     alert("test");
     window.location.href = "/signuppage";
 }
@@ -295,13 +295,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const result = await response.json();
 
+            // if (response.ok) {
+            //     alert("Password reset link has been sent to your email!");
+            //     forgotPasswordForm.reset();
+            //     toggleVisibility(forgotPasswordForm, loginForm);
+            // } else {
+            //     alert(result.message || "Failed to send reset link. Please try again.");
+            // }
+
+
             if (response.ok) {
-                alert("Password reset link has been sent to your email!");
-                forgotPasswordForm.reset();
-                toggleVisibility(forgotPasswordForm, loginForm);
+                Swal.fire({
+                    title: "Password reset link has been sent to your email!",
+                    text: "Please log in.",
+                    icon: "success"
+                }).then(() => {
+                    forgotPasswordForm.reset();
+                    toggleVisibility(forgotPasswordForm, loginForm);
+                });
             } else {
-                alert(result.message || "Failed to send reset link. Please try again.");
+                Swal.fire({
+                    title: "Failed to send reset link. Please try again.",
+                    text: data.message,
+                    icon: "warning"
+                });
             }
+
+
         } catch (error) {
             console.error("Error:", error);
             alert("An error occurred. Please try again.");
