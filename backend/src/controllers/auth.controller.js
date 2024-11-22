@@ -76,51 +76,51 @@ exports.register = [
                 { expiresIn: '1d' }
             );
 
-            const verificationLink = `http://localhost:3000/api/auth/verify-email?token=${verificationToken}`;
-            const mailOptions = {
-                from: config.email.from,
-                to: user.email,
-                subject: 'Verify Your Email Address',
-                html: `
-                    <!DOCTYPE html>
-<html>
-<head>
-    <title>QuickFind.LK Email Verification</title>
-</head>
-<body style="font-family: Arial, sans-serif; background-color: #f0f4f8; margin: 0; padding: 0;">
-    <div style="max-width: 600px; margin: 20px auto; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <!-- Header Section -->
-        <div style="text-align: center;">
-            <img src="https://your-logo-url.com/logo.png" alt="QuickFind.LK Logo" style="width: 80px; margin-bottom: 20px;">
-        </div>
-        <!-- Body Section -->
-        <div style="text-align: center; color: #1e293b;">
-            <h1 style="color: #1e40af; font-size: 20px; font-weight: bold;">Hi ${firstName},</h1>
-            <p style="margin-top: 16px; line-height: 1.6;">
-                Thank you for joining <span style="font-weight: bold; color: #1e40af;">QuickFind.LK</span>! We're thrilled to have you on board.
-            </p>
-            <p style="margin-top: 8px; line-height: 1.6;">
-                Please verify your email address to activate your account and start exploring our services.
-            </p>
-        </div>
-        <!-- Button Section -->
-        <div style="text-align: center; margin-top: 24px;">
-            <a href="${verificationLink}" target="_blank" style="background-color: #1e40af; color: #ffffff; text-decoration: none; padding: 10px 20px; border-radius: 6px; display: inline-block; font-size: 16px;">
-                Verify Email Address
-            </a>
-        </div>
-        <!-- Footer Section -->
-        <div style="text-align: center; margin-top: 24px; font-size: 14px; color: #64748b;">
-            <p>If you didn’t create an account, no further action is required.</p>
-            <p style="margin-top: 8px;">
-                Need help? Contact our <a href="https://quickfind.lk/support" style="color: #1e40af; text-decoration: none;">support team</a>.
-            </p>
-        </div>
-    </div>
-</body>
-</html>
-                `,
-            };
+            // const verificationLink = ` api/auth/verify-email?token=${verificationToken}`;
+            // const mailOptions = {
+            //     from: config.email.from,
+            //     to: user.email,
+            //     subject: 'Verify Your Email Address',
+            //     html: `
+            //         <!DOCTYPE html>
+            //             <html>
+            //             <head>
+            //                 <title>QuickFind.LK Email Verification</title>
+            //             </head>
+            //             <body style="font-family: Arial, sans-serif; background-color: #f0f4f8; margin: 0; padding: 0;">
+            //                 <div style="max-width: 600px; margin: 20px auto; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            //                     <!-- Header Section -->
+            //                     <div style="text-align: center;">
+            //                         <img src="https://your-logo-url.com/logo.png" alt="QuickFind.LK Logo" style="width: 80px; margin-bottom: 20px;">
+            //                     </div>
+            //                     <!-- Body Section -->
+            //                     <div style="text-align: center; color: #1e293b;">
+            //                         <h1 style="color: #1e40af; font-size: 20px; font-weight: bold;">Hi ${firstName},</h1>
+            //                         <p style="margin-top: 16px; line-height: 1.6;">
+            //                             Thank you for joining <span style="font-weight: bold; color: #1e40af;">QuickFind.LK</span>! We're thrilled to have you on board.
+            //                         </p>
+            //                         <p style="margin-top: 8px; line-height: 1.6;">
+            //                             Please verify your email address to activate your account and start exploring our services.
+            //                         </p>
+            //                     </div>
+            //                     <!-- Button Section -->
+            //                     <div style="text-align: center; margin-top: 24px;">
+            //                         <a href="${verificationLink}" target="_blank" style="background-color: #1e40af; color: #ffffff; text-decoration: none; padding: 10px 20px; border-radius: 6px; display: inline-block; font-size: 16px;">
+            //                             Verify Email Address
+            //                         </a>
+            //                     </div>
+            //                     <!-- Footer Section -->
+            //                     <div style="text-align: center; margin-top: 24px; font-size: 14px; color: #64748b;">
+            //                         <p>If you didn’t create an account, no further action is required.</p>
+            //                         <p style="margin-top: 8px;">
+            //                             Need help? Contact our <a href="https://quickfind.lk/support" style="color: #1e40af; text-decoration: none;">support team</a>.
+            //                         </p>
+            //                     </div>
+            //                 </div>
+            //             </body>
+            //             </html>
+            //     `,
+            // };
 
             await transporter.sendMail(mailOptions);
 
