@@ -307,7 +307,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (response.ok) {
                 Swal.fire({
                     title: "Password reset link has been sent to your email!",
-                    text: "Please log in.",
+                    text: "Please Check the email",
                     icon: "success"
                 }).then(() => {
                     forgotPasswordForm.reset();
