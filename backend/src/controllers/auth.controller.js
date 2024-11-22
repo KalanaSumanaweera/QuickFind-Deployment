@@ -48,17 +48,18 @@ const userValidationRules = [
 exports.register = [
     ...userValidationRules,
     async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ success: false, errors: errors.array() });
-        }
+        // const errors = validationResult(req);
+        // if (!errors.isEmpty()) {
+        //     return res.status(400).json({ success: false, errors: errors.array() });
+        // }
         try {
             const { firstName, lastName, email, phone, password, role } = req.body;
 
-            const existingUser = await User.findOne({ where: { email } });
-            if (existingUser) {
-                return res.status(400).json({ success: false, message: 'User already exists.' });
-            }
+            // const existingUser = await User.findOne({ where: { email } });
+
+            // if (existingUser) {
+            //     return res.status(400).json({ success: false, message: 'User already exists.' });
+            // }
 
             const user = await User.create({
                 firstName,
@@ -70,11 +71,11 @@ exports.register = [
                 emailVerified: false,
             });
 
-            const verificationToken = jwt.sign(
-                { email: user.email },
-                config.jwt.secret,
-                { expiresIn: '1d' }
-            );
+            // const verificationToken = jwt.sign(
+            //     { email: user.email },
+            //     config.jwt.secret,
+            //     { expiresIn: '1d' }
+            // );
 
             // const verificationLink = ` api/auth/verify-email?token=${verificationToken}`;
             // const mailOptions = {
@@ -122,7 +123,7 @@ exports.register = [
             //     `,
             // };
 
-            await transporter.sendMail(mailOptions);
+            // await transporter.sendMail(mailOptions);
 
             res.status(201).json({
                 success: true,

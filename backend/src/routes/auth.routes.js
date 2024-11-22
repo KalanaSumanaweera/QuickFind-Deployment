@@ -10,7 +10,7 @@ router.get('/verify-email', authController.verifyEmail);
 router.post('/request-password-reset', authController.requestPasswordReset);
 router.post('/reset-password', authController.resetPassword);
 
-// Google OAuth Routes
+// Google OAuth Routes K2000@gmail.com
 router.get('/auth/google', passport.authenticate('google', {
     scope: ['profile', 'email'], // Requested permissions
 }));
