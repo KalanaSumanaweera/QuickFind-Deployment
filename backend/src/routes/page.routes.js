@@ -18,7 +18,7 @@ router.get('/loginpage', (req, res) => {
 // Serve provider-dashboard.html 
 router.get('/provider-dashboard', (req, res) => {
     // res.sendFile(path.join(__dirname, '../../../frontend/pages/provider-dashboard.html'));
-    res.sendFile(path.join(__dirname, '../../../frontend/pages/developmentPage.html')); //this is the development forntend
+    res.sendFile(path.join(__dirname, '../../../frontend/pages/provider-dashboard.html')); //this is the development forntend
 });
 
 router.get('/signuppage', (req, res) => {

@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuickFind.LK - Provider Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="../../js/tailwind-config.js"></script>
+    <script src="../js/tailwind-config.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
 </head>
+
 <body class="bg-gray-100">
     <!-- Authentication Check -->
-   
+
 
     <!-- Dashboard Layout -->
     <div class="min-h-screen flex">
@@ -35,25 +37,29 @@
             <nav class="px-4">
                 <ul class="space-y-2">
                     <li>
-                        <a href="#" class="flex items-center p-3 rounded hover:bg-primary-light transition-colors" data-section="overview">
+                        <a href="#" class="flex items-center p-3 rounded hover:bg-primary-light transition-colors"
+                            data-section="overview">
                             <i class="fas fa-home w-6"></i>
                             <span>Overview</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center p-3 rounded hover:bg-primary-light transition-colors" data-section="services">
+                        <a href="#" class="flex items-center p-3 rounded hover:bg-primary-light transition-colors"
+                            data-section="services">
                             <i class="fas fa-tools w-6"></i>
                             <span>My Services</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center p-3 rounded hover:bg-primary-light transition-colors" data-section="reviews">
+                        <a href="#" class="flex items-center p-3 rounded hover:bg-primary-light transition-colors"
+                            data-section="reviews">
                             <i class="fas fa-star w-6"></i>
                             <span>Reviews</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center p-3 rounded hover:bg-primary-light transition-colors" data-section="profile">
+                        <a href="#" class="flex items-center p-3 rounded hover:bg-primary-light transition-colors"
+                            data-section="profile">
                             <i class="fas fa-user-cog w-6"></i>
                             <span>Profile</span>
                         </a>
@@ -63,7 +69,8 @@
 
             <!-- Logout Button -->
             <div class="px-4 mt-8">
-                <button onclick="logout()" class="flex items-center p-3 w-full rounded hover:bg-primary-light transition-colors">
+                <button onclick="logout()"
+                    class="flex items-center p-3 w-full rounded hover:bg-primary-light transition-colors">
                     <i class="fas fa-sign-out-alt w-6"></i>
                     <span>Logout</span>
                 </button>
@@ -102,13 +109,6 @@
                         </div>
                         <div class="bg-white p-6 rounded-lg shadow-sm">
                             <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-gray-500">Pending Bookings</h3>
-                                <i class="fas fa-calendar text-primary"></i>
-                            </div>
-                            <p class="text-3xl font-bold" id="pendingBookingsCount">0</p>
-                        </div>
-                        <div class="bg-white p-6 rounded-lg shadow-sm">
-                            <div class="flex items-center justify-between mb-4">
                                 <h3 class="text-gray-500">Total Reviews</h3>
                                 <i class="fas fa-star text-primary"></i>
                             </div>
@@ -132,15 +132,89 @@
                             <h3 class="text-xl font-bold">My Services</h3>
                             <p class="text-gray-500">Manage your service listings</p>
                         </div>
-                        <button id="addServiceButton" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-light transition-colors">
+                        <button id="addServiceButton"
+                            class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-light transition-colors">
                             <i class="fas fa-plus mr-2"></i>Add New Service
                         </button>
                     </div>
 
-                    <div id="servicesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <hr />
+
+                    <div id="servicesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-5">
                         <!-- Service cards will be loaded here -->
                     </div>
                 </div>
+
+                <div id="editServiceModal"
+                    class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
+                    <div class="bg-white p-6 rounded-lg shadow-md w-[600px]">
+                        <h3 class="text-lg font-bold mb-4">Edit Service</h3>
+                        <form id="editServiceForm">
+                            <input type="hidden" id="editServiceId" />
+                            <div class="mb-4">
+                                <label for="editServiceTitle" class="block text-sm font-bold">Title</label>
+                                <input type="text" id="editServiceTitle"
+                                    class="border border-gray-300 rounded w-full p-2" required />
+                            </div>
+                            <div class="mb-4">
+                                <label for="editServiceDescription" class="block text-sm font-bold">Description</label>
+                                <textarea id="editServiceDescription" class="border border-gray-300 rounded w-full p-2"
+                                    rows="3" required></textarea>
+                            </div>
+                            <div class="mb-4">
+                                <label for="editServicePrice" class="block text-sm font-bold">Price</label>
+                                <input type="number" id="editServicePrice"
+                                    class="border border-gray-300 rounded w-full p-2" required />
+                            </div>
+                            <div class="mb-4">
+                                <label for="editServicePriceType" class="block text-sm font-bold">Price Type</label>
+                                <select id="editServicePriceType" class="border border-gray-300 rounded w-full p-2">
+                                    <option value="fixed">Fixed</option>
+                                    <option value="hourly">Hourly</option>
+                                    <option value="negotiable">Negotiable</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label for="editServiceContactEmail" class="block text-sm font-bold">Contact
+                                    Email</label>
+                                <input type="email" id="editServiceContactEmail"
+                                    class="border border-gray-300 rounded w-full p-2" />
+                            </div>
+                            <div class="mb-4">
+                                <label for="editServiceContactNumber" class="block text-sm font-bold">Contact
+                                    Number</label>
+                                <input type="text" id="editServiceContactNumber"
+                                    class="border border-gray-300 rounded w-full p-2" />
+                            </div>
+                            <div class="mb-4">
+                                <label for="editServiceArea" class="block text-sm font-bold">Service Area</label>
+                                <input type="number" id="editServiceArea"
+                                    class="border border-gray-300 rounded w-full p-2" />
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-bold">Uploaded Images</label>
+                                <div id="uploadedImages" class="flex flex-wrap mb-4"></div>
+                                <input type="hidden" id="removedImages" name="removedImages" />
+
+                            </div>
+                            <div class="mb-4">
+                                <label for="editServiceImages" class="block text-sm font-bold">Add Photos</label>
+                                <input type="file" id="editServiceImages"
+                                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-light file:text-white hover:file:bg-primary"
+                                    multiple />
+                                <p class="text-xs text-gray-500 mt-1">You can upload up to 5 images total, including the
+                                    previously uploaded ones.</p>
+                            </div>
+                            <div class="flex justify-end space-x-4">
+                                <button type="button" class="bg-gray-300 text-black px-4 py-2 rounded-lg"
+                                    id="cancelEditService">Cancel</button>
+                                <button type="submit" class="bg-primary text-white px-4 py-2 rounded-lg">Save
+                                    Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
 
                 <!-- Reviews Section -->
                 <div id="reviews" class="dashboard-section hidden">
@@ -180,7 +254,8 @@
                                 <textarea id="address" class="w-full p-3 border rounded-lg"></textarea>
                             </div>
                             <div class="flex justify-end">
-                                <button type="submit" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-light transition-colors">
+                                <button type="submit"
+                                    class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-light transition-colors">
                                     Save Changes
                                 </button>
                             </div>
@@ -200,13 +275,13 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
+
             <form id="addServiceForm" class="space-y-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Service Title</label>
                     <input type="text" id="serviceTitle" required class="w-full p-3 border rounded-lg">
                 </div>
-                
+
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
                     <textarea id="serviceDescription" required class="w-full p-3 border rounded-lg" rows="4"></textarea>
@@ -216,26 +291,26 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Service location</label>
                     <input type="text" id="serviceLocation" required class="w-full p-3 border rounded-lg">
                 </div>
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
                         <select id="serviceCategory" required class="w-full p-3 border rounded-lg">
-                          <option value="">Select Category</option>
+                            <option value="">Select Category</option>
                         </select>
-                      </div>                      
+                    </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Service Area (km)</label>
                         <input type="number" id="serviceArea" required class="w-full p-3 border rounded-lg">
                     </div>
                 </div>
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Price (LKR)</label>
                         <input type="number" id="servicePrice" required class="w-full p-3 border rounded-lg">
                     </div>
-                    
+
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Price Type</label>
                         <select id="servicePriceType" required class="w-full p-3 border rounded-lg">
@@ -243,6 +318,18 @@
                             <option value="hourly">Hourly Rate</option>
                             <option value="negotiable">Negotiable</option>
                         </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Contact Email</label>
+                        <input type="email" id="contactEmail" required class="w-full p-3 border rounded-lg">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Contact Number</label>
+                        <input type="tel" id="contactNumber" required class="w-full p-3 border rounded-lg"
+                            pattern="[0-9]{10}" title="Enter a valid 10-digit phone number">
                     </div>
                 </div>
 
@@ -296,17 +383,16 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Service Images</label>
-                    <input type="file" id="serviceImages" multiple accept="image/*" class="w-full p-3 border rounded-lg">
+                    <input type="file" id="serviceImages" multiple accept="image/*"
+                        class="w-full p-3 border rounded-lg">
                     <p class="text-sm text-gray-500 mt-1">You can upload up to 5 images</p>
                 </div>
 
                 <div class="flex justify-end space-x-3 mt-6">
-                    <button type="button" id="cancel" 
-                            class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+                    <button type="button" id="cancel" class="px-4 py-2 border rounded-lg hover:bg-gray-100">
                         Cancel
                     </button>
-                    <button type="submit" 
-                            class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light">
+                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light">
                         Add Service
                     </button>
                 </div>
@@ -317,4 +403,5 @@
     <script src="../js/dashboard.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
+
 </html>

@@ -1,36 +1,28 @@
-//this is service route 
-
 const express = require('express');
-const router = express.Router();
-const { addService } = require('../controllers/service.controller'); // Controller for adding services
-const serviceUpload = require('../middleware/upload.middleware'); // Corrected middleware import
-const validateService = require('../validator/service.validator'); // Validation middleware for service fields
-const authenticate = require('../middleware/auth.middleware'); // Authentication middleware
+const multer = require('multer');
+const { addService, getAllServices, deleteService, getServicesByProvider,editService,getServiceById, updateService } = require('../controllers/service.controller');
 
-// Route for adding a new service
-router.post(
-    '/add',
-    authenticate, // Ensure user is authenticated
-    (req, res, next) => {
-        serviceUpload(req, res, (err) => { 
-            // Handle Multer errors
-            if (err) {
-                return res.status(400).json({
-                    message: err.message || 'Error during file upload',
-                });
-            }
-            next();
-        });
+const router = express.Router();
+
+// Multer setup for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); // Specify the uploads folder
     },
-    validateService, // Validate service fields after file upload
-    async (req, res) => {
-        try {
-            await addService(req, res); // Handle service addition
-        } catch (err) {
-            console.error('Error adding service:', err.message);
-            res.status(500).json({ message: 'Internal server error' });
-        }
-    }
-);
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    },
+});
+const upload = multer({ storage });
+
+// Routes
+router.post('/add', upload.array('serviceImages', 5), addService); // Allow up to 5 images
+router.get('/', getAllServices);
+router.delete('/:id', deleteService);
+router.get('/provider/:providerId', getServicesByProvider);
+router.get('/:serviceId', getServiceById);
+router.put('/:serviceId', updateService);
+
+
 
 module.exports = router;

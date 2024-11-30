@@ -103,7 +103,7 @@
 
 
 
-require('dotenv').config({ path: './src/.env' });
+require('dotenv').config({ path: './backend/src/.env' });
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
@@ -127,7 +127,7 @@ require('./models/associations');
 require('./config/passport')(passport);
 
 // Allowed origins for CORS
-const allowedOrigins = ['https://quickfind-38321514be2b.herokuapp.com', 'http://127.0.0.1:5500'];
+const allowedOrigins = ['https://quickfind-38321514be2b.herokuapp.com', 'http://127.0.0.1:5500', 'http://localhost:3000'];
 
 const app = express();
 

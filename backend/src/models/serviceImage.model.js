@@ -9,8 +9,8 @@ const ServiceImage = sequelize.define('ServiceImage', {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
-    imageUrl: {
-        type: DataTypes.STRING,
+    imageUrls: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false
     },
     serviceId: {

@@ -27,27 +27,27 @@ document.addEventListener('DOMContentLoaded', () => {
 // public/js/addService.js (or wherever your JS is for the form)
 document.addEventListener('DOMContentLoaded', async () => {
     const categorySelect = document.getElementById('serviceCategory');
-  
+
     try {
-      // Fetch categories from the API
-      const response = await fetch('http://localhost:3000/api/categories');
-      if (!response.ok) {
-        throw new Error('Failed to fetch categories');
-      }
-      const categories = await response.json();
-  
-      // Populate the select element with options
-      categories.forEach(category => {
-        const option = document.createElement('option');
-        option.value = category.id;
-        option.textContent = category.name;
-        categorySelect.appendChild(option);
-      });
+        // Fetch categories from the API
+        const response = await fetch('http://localhost:3000/api/categories');
+        if (!response.ok) {
+            throw new Error('Failed to fetch categories');
+        }
+        const categories = await response.json();
+
+        // Populate the select element with options
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category.id;
+            option.textContent = category.name;
+            categorySelect.appendChild(option);
+        });
     } catch (error) {
-      console.error('Error loading categories:', error);
+        console.error('Error loading categories:', error);
     }
-  });
-  
+});
+
 
 //Show the Add Service model
 document.addEventListener('DOMContentLoaded', () => {
@@ -100,7 +100,6 @@ function loadProviderData() {
 
     // Update dashboard stats
     document.getElementById('activeServicesCount').innerText = provider.stats.activeServices;
-    document.getElementById('pendingBookingsCount').innerText = provider.stats.pendingBookings;
     document.getElementById('totalReviewsCount').innerText = provider.stats.totalReviews;
 
     // Update recent activity
@@ -135,28 +134,89 @@ document.getElementById('addServiceForm').addEventListener('submit', async (e) =
 
     const formData = new FormData();
 
+    // Helper function to display validation error
+    const showValidationError = (message) => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Validation Error',
+            text: message,
+        });
+    };
+
     // Collect available days
     const availableDays = Array.from(
         document.querySelectorAll('input[name="availableDays"]:checked')
     ).map((checkbox) => checkbox.value);
+    if (availableDays.length === 0) {
+        return showValidationError('Please select at least one available day.');
+    }
     formData.append('availableDays', JSON.stringify(availableDays));
 
     // Collect service images
     const serviceImages = document.getElementById('serviceImages').files;
+    if (serviceImages.length === 0) {
+        return showValidationError('Please upload at least one service image.');
+    }
     Array.from(serviceImages).forEach((file) => {
         formData.append('serviceImages', file);
     });
 
-    // Collect other form data
-    formData.append('title', document.getElementById('serviceTitle').value);
-    formData.append('description', document.getElementById('serviceDescription').value);
-    formData.append('categoryId', document.getElementById('serviceCategory').value);
-    formData.append('serviceArea', document.getElementById('serviceArea').value);
-    formData.append('location', document.getElementById('serviceLocation').value);
-    formData.append('price', document.getElementById('servicePrice').value);
-    formData.append('priceType', document.getElementById('servicePriceType').value);
-    formData.append('workingHoursStart', document.getElementById('workingHoursStart').value);
-    formData.append('workingHoursEnd', document.getElementById('workingHoursEnd').value);
+    // Collect and validate other form data
+    const title = document.getElementById('serviceTitle').value.trim();
+    if (!title) return showValidationError('Service title is required.');
+    formData.append('title', title);
+
+    const description = document.getElementById('serviceDescription').value.trim();
+    if (!description) return showValidationError('Service description is required.');
+    formData.append('description', description);
+
+    const categoryId = document.getElementById('serviceCategory').value;
+    if (!categoryId) return showValidationError('Please select a service category.');
+    formData.append('categoryId', categoryId);
+
+    const serviceArea = document.getElementById('serviceArea').value.trim();
+    if (!serviceArea) return showValidationError('Service area is required.');
+    formData.append('serviceArea', serviceArea);
+
+    const location = document.getElementById('serviceLocation').value.trim();
+    if (!location) return showValidationError('Service location is required.');
+    formData.append('location', location);
+
+    const price = parseFloat(document.getElementById('servicePrice').value);
+    if (isNaN(price) || price <= 0) return showValidationError('Please enter a valid price.');
+    formData.append('price', price);
+
+    const priceType = document.getElementById('servicePriceType').value;
+    if (!priceType) return showValidationError('Please select a price type.');
+    formData.append('priceType', priceType);
+
+    const contactEmail = document.getElementById('contactEmail').value.trim();
+    if (!/\S+@\S+\.\S+/.test(contactEmail)) {
+        return showValidationError('Please enter a valid email address.');
+    }
+    formData.append('contactEmail', contactEmail);
+
+    const contactNumber = document.getElementById('contactNumber').value.trim();
+    if (!/^\d{10,15}$/.test(contactNumber)) {
+        return showValidationError('Please enter a valid contact number.');
+    }
+    formData.append('contactNumber', contactNumber);
+
+    const workingHoursStart = document.getElementById('workingHoursStart').value;
+    const workingHoursEnd = document.getElementById('workingHoursEnd').value;
+    if (!workingHoursStart || !workingHoursEnd) {
+        return showValidationError('Working hours start and end time are required.');
+    }
+    if (workingHoursStart >= workingHoursEnd) {
+        return showValidationError('Working hours start time must be before end time.');
+    }
+    formData.append('workingHoursStart', workingHoursStart);
+    formData.append('workingHoursEnd', workingHoursEnd);
+
+    var userData = localStorage.getItem('user');
+    var userDeatails = JSON.parse(userData);
+    const userId = userDeatails.id; // user id
+    formData.append('providerId', userId);
 
     try {
         const response = await fetch('http://localhost:3000/api/service/add', {
@@ -201,4 +261,196 @@ document.getElementById('addServiceForm').addEventListener('submit', async (e) =
         console.error('Error:', error);
     }
 });
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const userData = localStorage.getItem('user');
+    const userDetails = JSON.parse(userData);
+    const userId = userDetails.id;
+
+    async function loadServices() {
+        const response = await fetch(`http://localhost:3000/api/service/provider/${userId}`);
+        const services = await response.json();
+
+        const servicesList = document.getElementById('servicesList');
+        servicesList.innerHTML = ''; // Clear the list
+
+        services.forEach((service) => {
+            const card = `
+                <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                    <img src="${service.imageUrl || 'https://via.placeholder.com/300x150'}" alt="Service Image" class="w-full h-40 object-cover" />
+                    <div class="p-4">
+                        <h4 class="text-lg font-bold mb-2">${service.title}</h4>
+                        <p class="text-gray-500 text-sm mb-4">${service.description}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-primary font-bold">LKR ${service.price}/${service.priceType}</span>
+                            <span class="text-sm text-gray-500">Status: <span class="${service.status === 'active' ? 'text-green-500' : 'text-red-500'}">${service.status}</span></span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center p-4 border-t">
+                        <button class="text-blue-500 hover:text-blue-700 text-sm font-bold edit-service-button" data-id="${service.id}">
+                            Edit
+                        </button>
+                        <button class="text-red-500 hover:text-red-700 text-sm font-bold delete-service-button" data-id="${service.id}">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            `;
+            servicesList.innerHTML += card;
+        });
+    }
+
+    loadServices();
+
+    // Delegated event listener for the edit button
+    document.getElementById('servicesList').addEventListener('click', (event) => {
+        if (event.target.classList.contains('edit-service-button')) {
+            const serviceId = event.target.getAttribute('data-id');
+            openEditServiceModal(serviceId);
+        }
+    });
+
+    // Delegated event listener for the delete button
+    document.getElementById('servicesList').addEventListener('click', (event) => {
+        if (event.target.classList.contains('delete-service-button')) {
+            const serviceId = event.target.getAttribute('data-id');
+            deleteService(serviceId);
+        }
+    });
+});
+
+
+
+function openEditServiceModal(serviceId) {
+    fetch(`http://localhost:3000/api/service/${serviceId}`)
+        .then((response) => response.json())
+        .then((service) => {
+            // Populate form fields
+            document.getElementById('editServiceId').value = service.id;
+            document.getElementById('editServiceTitle').value = service.title;
+            document.getElementById('editServiceDescription').value = service.description;
+            document.getElementById('editServicePrice').value = service.price;
+            document.getElementById('editServicePriceType').value = service.priceType;
+            document.getElementById('editServiceContactEmail').value = service.contactEmail;
+            document.getElementById('editServiceContactNumber').value = service.contactNumber;
+            document.getElementById('editServiceArea').value = service.serviceArea;
+
+            // Display uploaded images
+            const uploadedImagesContainer = document.getElementById('uploadedImages');
+            uploadedImagesContainer.innerHTML = '';
+
+            service.images.forEach((imageUrl, index) => {
+                const imgElement = document.createElement('div');
+                imgElement.classList.add('relative', 'w-24', 'h-24', 'border', 'rounded', 'overflow-hidden', 'm-2');
+
+                imgElement.innerHTML = `
+                    <img src="${imageUrl}" alt="Uploaded Image" class="w-full h-full object-cover">
+                    <button class="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center" onclick="removeImage(${index})">×</button>
+                `;
+
+                uploadedImagesContainer.appendChild(imgElement);
+            });
+
+            // Show the modal
+            document.getElementById('editServiceModal').classList.remove('hidden');
+        })
+        .catch((error) => console.error('Error loading service:', error));
+}
+
+
+
+function closeEditServiceModal() {
+    document.getElementById('editServiceModal').classList.add('hidden');
+}
+
+document.getElementById('cancelEditService').addEventListener('click', closeEditServiceModal);
+
+
+document.getElementById('editServiceForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const serviceId = document.getElementById('editServiceId').value;
+    const files = document.getElementById('editServiceImages').files;
+    const totalImages = files.length + document.getElementById('uploadedImages').children.length - removedImages.length;
+
+    // Validate image count
+    if (totalImages > 5) {
+        Swal.fire('Error', 'You can only have up to 5 images.', 'error');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('title', document.getElementById('editServiceTitle').value);
+    formData.append('description', document.getElementById('editServiceDescription').value);
+    formData.append('price', document.getElementById('editServicePrice').value);
+    formData.append('priceType', document.getElementById('editServicePriceType').value);
+    formData.append('contactEmail', document.getElementById('editServiceContactEmail').value);
+    formData.append('contactNumber', document.getElementById('editServiceContactNumber').value);
+    formData.append('serviceArea', document.getElementById('editServiceArea').value);
+    formData.append('removedImages', JSON.stringify(removedImages));
+
+    // Append new files
+    Array.from(files).forEach((file) => {
+        formData.append('images', file);
+    });
+
+    try {
+        const response = await fetch(`http://localhost:3000/api/service/${serviceId}`, {
+            method: 'PUT',
+            body: formData,
+        });
+
+        if (response.ok) {
+            Swal.fire('Success', 'Service updated successfully', 'success');
+            closeEditServiceModal();
+            location.reload();
+        } else {
+            const error = await response.json();
+            Swal.fire('Error', error.message || 'Failed to update service', 'error');
+        }
+    } catch (error) {
+        console.error('Error updating service:', error);
+    }
+});
+
+
+function deleteService(serviceId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won’t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            const response = await fetch(`http://localhost:3000/api/service/${serviceId}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                Swal.fire('Deleted!', 'Service has been deleted.', 'success');
+                location.reload();
+            } else {
+                Swal.fire('Error', 'Failed to delete service', 'error');
+            }
+        }
+    });
+}
+
+const removedImages = []; // Track removed images
+
+function removeImage(index) {
+    const uploadedImagesContainer = document.getElementById('uploadedImages');
+    const imageDiv = uploadedImagesContainer.children[index];
+
+    if (imageDiv) {
+        uploadedImagesContainer.removeChild(imageDiv);
+        removedImages.push(index); // Keep track of removed indexes
+    }
+
+    // Update the form hidden input with removed image indexes
+    document.getElementById('removedImages').value = JSON.stringify(removedImages);
+}
+
+
 
