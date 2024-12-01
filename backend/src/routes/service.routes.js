@@ -21,7 +21,7 @@ router.get('/', getAllServices);
 router.delete('/:id', deleteService);
 router.get('/provider/:providerId', getServicesByProvider);
 router.get('/:serviceId', getServiceById);
-router.put('/:serviceId', updateService);
+router.put('/:serviceId', upload.array('images', 5), updateService);
 
 
 

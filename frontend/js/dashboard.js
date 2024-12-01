@@ -77,41 +77,6 @@ function showSection(sectionId) {
     document.getElementById('sectionTitle').innerText = sectionTitle;
 }
 
-// Function to fetch provider data
-function loadProviderData() {
-    // Simulating a fetch from an API
-    const provider = {
-        name: "John Doe",
-        role: "Service Provider",
-        stats: {
-            activeServices: 5,
-            pendingBookings: 3,
-            totalReviews: 12
-        },
-        recentActivity: [
-            { action: "Service 'Plumbing Fix' booked", timestamp: "2 hours ago" },
-            { action: "Review received: 'Great work!'", timestamp: "1 day ago" },
-        ]
-    };
-
-    // Update provider info
-    document.getElementById('providerName').innerText = provider.name;
-    document.getElementById('providerRole').innerText = provider.role;
-
-    // Update dashboard stats
-    document.getElementById('activeServicesCount').innerText = provider.stats.activeServices;
-    document.getElementById('totalReviewsCount').innerText = provider.stats.totalReviews;
-
-    // Update recent activity
-    const recentActivity = document.getElementById('recentActivity');
-    recentActivity.innerHTML = '';
-    provider.recentActivity.forEach(activity => {
-        const div = document.createElement('div');
-        div.classList.add('p-4', 'bg-gray-50', 'rounded', 'flex', 'justify-between');
-        div.innerHTML = `<span>${activity.action}</span><span class="text-sm text-gray-400">${activity.timestamp}</span>`;
-        recentActivity.appendChild(div);
-    });
-}
 
 // Logout function
 function logout() {
@@ -277,7 +242,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         services.forEach((service) => {
             // Check if there are images and display the first one or a placeholder
             const firstImage = service.image && service.image.length > 0 ? service.image[0] : 'https://via.placeholder.com/300x150';
-        
+
             const card = `
                 <div class="bg-white shadow-md rounded-lg overflow-hidden">
                     <img src="${firstImage}" alt="Service Image" class="w-full h-40 object-cover" />
@@ -301,7 +266,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
             servicesList.innerHTML += card;
         });
-        
+
     }
 
     loadServices();
@@ -352,18 +317,18 @@ function openEditServiceModal(serviceId) {
                 service.image.forEach((imageUrl, index) => {
                     const imgElement = document.createElement('div');
                     imgElement.classList.add('relative', 'w-24', 'h-24', 'border', 'rounded', 'overflow-hidden', 'm-2');
-            
+
                     imgElement.innerHTML = `
                         <img src="${imageUrl}" alt="Uploaded Image" class="w-full h-full object-cover">
                         <button class="remove-image-btn absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center">
                             ×
                         </button>
                     `;
-            
+
                     // Attach event listener to the remove button
                     const removeButton = imgElement.querySelector('.remove-image-btn');
                     removeButton.addEventListener('click', () => removeImage(index));
-            
+
                     uploadedImagesContainer.appendChild(imgElement);
                 });
             } else {
@@ -472,4 +437,109 @@ function removeImage(index) {
 }
 
 
+
+async function loadProviderData() {
+    try {
+        // Retrieve user data from localStorage
+        const userData = localStorage.getItem('user');
+        if (!userData) {
+            console.warn('No user data found. Redirecting to login.');
+            window.location.href = '/login'; // Redirect if user data is missing
+            return;
+        }
+
+        const userDetails = JSON.parse(userData);
+        const userId = userDetails.id; // Extract user ID
+
+        // Make an API request with the user ID
+        const response = await fetch(`/api/providerDashboard/overview?providerId=${userId}`); // Include userId as a query parameter
+
+        if (!response.ok) throw new Error('Failed to fetch provider data.');
+
+        const data = await response.json();
+
+        // Update provider info
+        document.getElementById('providerName').innerText = data.provider.firstName + " " + data.provider.lastName;
+        document.getElementById('providerRole').innerText = data.provider.role;
+
+
+        // Update dashboard stats
+        document.getElementById('activeServicesCount').innerText = data.stats.activeServices || 0;
+        document.getElementById('totalReviewsCount').innerText = data.stats.totalReviews || 0;
+
+        // Update recent activity
+        const recentActivity = document.getElementById('recentActivity');
+        recentActivity.innerHTML = ''; // Clear previous content
+        (data.recentActivity || []).forEach((activity) => {
+            const div = document.createElement('div');
+            div.classList.add('p-4', 'bg-gray-50', 'rounded', 'flex', 'justify-between');
+            div.innerHTML = `
+                <span>${activity.action}</span>
+                <span class="text-sm text-gray-400">${activity.timestamp}</span>
+            `;
+            recentActivity.appendChild(div);
+        });
+    } catch (error) {
+        console.error('Error loading provider data:', error);
+        alert('Failed to load provider data. Please try again later.');
+    }
+}
+
+
+async function loadReviews() {
+    const reviewsList = document.getElementById('reviewsList');
+    reviewsList.innerHTML = ''; // Clear any existing reviews
+
+    const userData = localStorage.getItem('user');
+    const userDetails = JSON.parse(userData);
+    const userId = userDetails.id; // Extract user ID
+
+    try {
+        const response = await fetch(`/api/providerDashboard/reviews?providerId=${userId}`); // Replace with your actual API endpoint
+        const reviews = await response.json();
+
+        reviews.forEach((review) => {
+            const card = document.createElement('div');
+            card.classList.add('review-card', 'bg-white', 'rounded-lg', 'shadow-lg', 'p-6', 'mb-4', 'border', 'border-gray-200', 'hover:border-primary-light', 'transition-all');
+
+            card.innerHTML = `
+                <div class="flex items-center mb-4">
+                
+                    <div class="avatar w-14 h-14 rounded-full bg-gray-300 overflow-hidden mr-4">
+                        <img src="${review.userImage || 'default-user.png'}" alt="User Image" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-primary">${review.userName}</h4>
+                        <p class="text-sm text-text-secondary">Posted on: ${new Date(review.date).toLocaleDateString()}</p>
+                    </div>
+                </div>
+                                <div class="mt-3">
+                    <span class="font-medium text-primary">Service: </span>
+                    <span class="text-text-secondary">${review.serviceTitle}</span>
+                </div>
+                <p class="mt-4 text-gray-800 text-base">
+                    "${review.comment}"
+                </p>
+                <div class="flex items-center mt-3">
+                    <div class="flex text-yellow-400">
+                        ${'★'.repeat(Math.floor(review.rating))}${'☆'.repeat(5 - Math.floor(review.rating))}
+                    </div>
+                    <span class="ml-2 text-text-secondary">(${review.rating})</span>
+                </div>
+
+            `;
+
+            reviewsList.appendChild(card);
+        });
+    } catch (error) {
+        console.error('Error loading reviews:', error);
+        reviewsList.innerHTML = '<p class="text-red-500">Failed to load reviews.</p>';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const reviewsSection = document.getElementById('reviews');
+    const reviewsList = document.getElementById('reviewsList');
+    loadReviews();
+});
 
