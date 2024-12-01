@@ -165,6 +165,9 @@ app.use(
 // Serve static files (frontend)
 app.use(express.static(path.join(__dirname, '../../frontend')));
 
+app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
+
+
 // Root route: Send the login page
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../../frontend/pages/auth/login.html'));

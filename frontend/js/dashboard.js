@@ -275,9 +275,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         servicesList.innerHTML = ''; // Clear the list
 
         services.forEach((service) => {
+            // Check if there are images and display the first one or a placeholder
+            const firstImage = service.image && service.image.length > 0 ? service.image[0] : 'https://via.placeholder.com/300x150';
+        
             const card = `
                 <div class="bg-white shadow-md rounded-lg overflow-hidden">
-                    <img src="${service.imageUrl || 'https://via.placeholder.com/300x150'}" alt="Service Image" class="w-full h-40 object-cover" />
+                    <img src="${firstImage}" alt="Service Image" class="w-full h-40 object-cover" />
                     <div class="p-4">
                         <h4 class="text-lg font-bold mb-2">${service.title}</h4>
                         <p class="text-gray-500 text-sm mb-4">${service.description}</p>
@@ -298,6 +301,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
             servicesList.innerHTML += card;
         });
+        
     }
 
     loadServices();
@@ -323,33 +327,48 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 function openEditServiceModal(serviceId) {
     fetch(`http://localhost:3000/api/service/${serviceId}`)
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch service with ID: ${serviceId}`);
+            }
+            return response.json();
+        })
         .then((service) => {
             // Populate form fields
-            document.getElementById('editServiceId').value = service.id;
-            document.getElementById('editServiceTitle').value = service.title;
-            document.getElementById('editServiceDescription').value = service.description;
-            document.getElementById('editServicePrice').value = service.price;
-            document.getElementById('editServicePriceType').value = service.priceType;
-            document.getElementById('editServiceContactEmail').value = service.contactEmail;
-            document.getElementById('editServiceContactNumber').value = service.contactNumber;
-            document.getElementById('editServiceArea').value = service.serviceArea;
+            document.getElementById('editServiceId').value = service.id || '';
+            document.getElementById('editServiceTitle').value = service.title || '';
+            document.getElementById('editServiceDescription').value = service.description || '';
+            document.getElementById('editServicePrice').value = service.price || '';
+            document.getElementById('editServicePriceType').value = service.priceType || '';
+            document.getElementById('editServiceContactEmail').value = service.contactEmail || '';
+            document.getElementById('editServiceContactNumber').value = service.contactNumber || '';
+            document.getElementById('editServiceArea').value = service.serviceArea || '';
 
             // Display uploaded images
             const uploadedImagesContainer = document.getElementById('uploadedImages');
             uploadedImagesContainer.innerHTML = '';
 
-            service.images.forEach((imageUrl, index) => {
-                const imgElement = document.createElement('div');
-                imgElement.classList.add('relative', 'w-24', 'h-24', 'border', 'rounded', 'overflow-hidden', 'm-2');
-
-                imgElement.innerHTML = `
-                    <img src="${imageUrl}" alt="Uploaded Image" class="w-full h-full object-cover">
-                    <button class="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center" onclick="removeImage(${index})">×</button>
-                `;
-
-                uploadedImagesContainer.appendChild(imgElement);
-            });
+            if (service.image && Array.isArray(service.image) && service.image.length > 0) {
+                service.image.forEach((imageUrl, index) => {
+                    const imgElement = document.createElement('div');
+                    imgElement.classList.add('relative', 'w-24', 'h-24', 'border', 'rounded', 'overflow-hidden', 'm-2');
+            
+                    imgElement.innerHTML = `
+                        <img src="${imageUrl}" alt="Uploaded Image" class="w-full h-full object-cover">
+                        <button class="remove-image-btn absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center">
+                            ×
+                        </button>
+                    `;
+            
+                    // Attach event listener to the remove button
+                    const removeButton = imgElement.querySelector('.remove-image-btn');
+                    removeButton.addEventListener('click', () => removeImage(index));
+            
+                    uploadedImagesContainer.appendChild(imgElement);
+                });
+            } else {
+                uploadedImagesContainer.innerHTML = `<p class="text-gray-500">No images available for this service.</p>`;
+            }
 
             // Show the modal
             document.getElementById('editServiceModal').classList.remove('hidden');

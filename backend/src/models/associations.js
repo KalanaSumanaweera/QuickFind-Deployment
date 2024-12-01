@@ -18,8 +18,9 @@ User.hasMany(Service, { foreignKey: 'providerId', as: 'services' });
 Service.belongsTo(User, { foreignKey: 'providerId', as: 'provider' });
 
 // Service - ServiceImage (one-to-many)
-Service.hasMany(ServiceImage, { foreignKey: 'serviceId', as: 'images' });
-ServiceImage.belongsTo(Service, { foreignKey: 'serviceId' });
+Service.hasOne(ServiceImage, { foreignKey: 'serviceId', as: 'image' });
+ServiceImage.belongsTo(Service, { foreignKey: 'serviceId', as: 'service' });
+
 
 // Service - Category (by categoryId)
 Category.hasMany(Service, { foreignKey: 'categoryId' });

@@ -80,13 +80,18 @@ exports.getServicesByProvider = async (req, res) => {
     const { providerId } = req.params;
 
     try {
-        // Fetch services with associated category details
+        // Fetch services with associated category and images
         const services = await Service.findAll({
             where: { providerId: providerId },
             include: [
                 {
                     model: require('../models/category.model'),
-                    attributes: ['name'], // Include only the category name
+                    attributes: ['name'], 
+                },
+                {
+                    model: require('../models/serviceImage.model'), 
+                    as: 'image', 
+                    attributes: ['id', 'imageUrls'], 
                 },
             ],
         });
@@ -95,12 +100,19 @@ exports.getServicesByProvider = async (req, res) => {
             return res.status(404).json({ message: 'No services found for this provider' });
         }
 
-        res.status(200).json(services);
+        // Transform services to include a flattened image list (optional)
+        const transformedServices = services.map(service => ({
+            ...service.toJSON(),
+            image: service.image ? service.image.imageUrls : [],
+        }));
+
+        res.status(200).json(transformedServices);
     } catch (error) {
         console.error('Error fetching services:', error);
         res.status(500).json({ message: 'Failed to fetch services', error });
     }
 };
+
 
 exports.getServiceById = async (req, res) => {
     try {
@@ -110,7 +122,7 @@ exports.getServiceById = async (req, res) => {
         const service = await Service.findByPk(serviceId, {
             include: {
                 model: ServiceImage,
-                as: 'ServiceImages', // Alias defined in associations
+                as: 'image', // Alias defined in associations
                 attributes: ['id', 'imageUrls'], // Fetch required fields only
             },
         });
@@ -121,7 +133,7 @@ exports.getServiceById = async (req, res) => {
 
         res.json({
             ...service.toJSON(),
-            images: service.ServiceImages.map((img) => img.imageUrls).flat(), // Flatten image arrays
+            image: service.image ? service.image.imageUrls : [], // Use the alias and safely handle null
         });
     } catch (error) {
         console.error('Error fetching service:', error);
@@ -130,14 +142,24 @@ exports.getServiceById = async (req, res) => {
 };
 
 
+
 exports.updateService = async (req, res) => {
     try {
         const { serviceId } = req.params;
-        const service = await Service.findByPk(serviceId);
+        const service = await Service.findByPk(serviceId, {
+            include: {
+                model: ServiceImage,
+                as: 'image', // Alias defined in associations
+                attributes: ['id', 'imageUrls'], // Fetch only imageUrls and id
+            },
+        });
 
         if (!service) {
             return res.status(404).json({ message: 'Service not found' });
         }
+
+        // Ensure images field is an array
+        service.image = service.image || [];  // Make sure the image is always an array
 
         // Update basic fields
         service.title = req.body.title || service.title;
@@ -151,17 +173,18 @@ exports.updateService = async (req, res) => {
         // Handle removed images
         if (req.body.removedImages) {
             const removedIndexes = JSON.parse(req.body.removedImages);
-            service.images = service.images.filter((_, index) => !removedIndexes.includes(index));
+            service.image = service.image.filter((image, index) => !removedIndexes.includes(index));
         }
 
         // Handle new uploaded images
         if (req.files && req.files.length > 0) {
             const newImages = req.files.map((file) => file.path); // Assuming you're storing file paths
-            service.images = [...service.images, ...newImages];
+            // Adding new images to the existing image array
+            service.image = [...service.image, ...newImages];
         }
 
         // Ensure image count doesn't exceed the limit
-        if (service.images.length > 5) {
+        if (service.image.length > 5) {
             return res.status(400).json({ message: 'You can only have up to 5 images.' });
         }
 
