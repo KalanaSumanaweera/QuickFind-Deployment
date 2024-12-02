@@ -120,6 +120,7 @@ const pageRoutes = require('./routes/page.routes');
 const userProfileRoutes = require('./routes/userProfile.routes');
 const serviceRoutes = require('./routes/service.routes');
 const categoryRoutes = require('./routes/categories.routes');
+const providerDashboardRoutes = require('./routes/providerDashboard.route');
 
 // Import Sequelize associations
 require('./models/associations');
@@ -201,6 +202,8 @@ app.use('/api/auth', authRoutes); // Authentication routes
 app.use('/api/service', serviceRoutes); // Service-related routes
 app.use('/api/categories', categoryRoutes); // Category-related routes
 app.use('/api/user', userProfileRoutes); // Category-related routes
+app.use('/api/providerDashboard', providerDashboardRoutes);
+
 
 // 404 Handler for undefined routes
 app.use((req, res) => {

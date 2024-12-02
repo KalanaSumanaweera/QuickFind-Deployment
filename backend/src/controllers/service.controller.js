@@ -142,24 +142,22 @@ exports.getServiceById = async (req, res) => {
 };
 
 
-
 exports.updateService = async (req, res) => {
     try {
         const { serviceId } = req.params;
+
+        // Find the service with its associated images
         const service = await Service.findByPk(serviceId, {
             include: {
                 model: ServiceImage,
-                as: 'image', // Alias defined in associations
-                attributes: ['id', 'imageUrls'], // Fetch only imageUrls and id
-            },
+                as: 'image',
+                attributes: ['id', 'imageUrls']
+            }
         });
 
         if (!service) {
             return res.status(404).json({ message: 'Service not found' });
         }
-
-        // Ensure images field is an array
-        service.image = service.image || [];  // Make sure the image is always an array
 
         // Update basic fields
         service.title = req.body.title || service.title;
@@ -173,22 +171,44 @@ exports.updateService = async (req, res) => {
         // Handle removed images
         if (req.body.removedImages) {
             const removedIndexes = JSON.parse(req.body.removedImages);
-            service.image = service.image.filter((image, index) => !removedIndexes.includes(index));
+
+            // Get existing images and filter out the removed ones
+            const existingImages = service.image ? service.image.imageUrls : [];
+            const updatedImages = existingImages.filter((_, index) => !removedIndexes.includes(index));
+
+            // Update the database with the new image array
+            if (service.image) {
+                service.image.imageUrls = updatedImages;
+                await service.image.save();
+            }
         }
 
         // Handle new uploaded images
         if (req.files && req.files.length > 0) {
-            const newImages = req.files.map((file) => file.path); // Assuming you're storing file paths
-            // Adding new images to the existing image array
-            service.image = [...service.image, ...newImages];
+            const uploadedImagePaths = req.files.map((file) => file.path);
+
+            if (service.image) {
+                // Append new images to the existing array
+                service.image.imageUrls = [...service.image.imageUrls, ...uploadedImagePaths];
+                await service.image.save();
+            } else {
+                // Create a new ServiceImage record if it doesn't exist
+                await ServiceImage.create({
+                    serviceId: service.id,
+                    imageUrls: uploadedImagePaths
+                });
+            }
         }
 
-        // Ensure image count doesn't exceed the limit
-        if (service.image.length > 5) {
+        // Ensure the total image count does not exceed the limit
+        const totalImages = service.image ? service.image.imageUrls.length : 0;
+        if (totalImages > 5) {
             return res.status(400).json({ message: 'You can only have up to 5 images.' });
         }
 
+        // Save the updated service
         await service.save();
+
         res.json({ message: 'Service updated successfully', service });
     } catch (error) {
         console.error('Error updating service:', error);
