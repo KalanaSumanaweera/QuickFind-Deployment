@@ -145,22 +145,26 @@
                     </div>
                 </div>
 
-                <div id="editServiceModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
+                <div id="editServiceModal"
+                    class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
                     <div class="bg-white p-6 rounded-lg shadow-md w-[600px] max-h-[80vh] overflow-y-auto">
                         <h3 class="text-lg font-bold mb-4">Edit Service</h3>
                         <form id="editServiceForm">
                             <input type="hidden" id="editServiceId" />
                             <div class="mb-4">
                                 <label for="editServiceTitle" class="block text-sm font-bold">Title</label>
-                                <input type="text" id="editServiceTitle" class="border border-gray-300 rounded w-full p-2" required />
+                                <input type="text" id="editServiceTitle"
+                                    class="border border-gray-300 rounded w-full p-2" required />
                             </div>
                             <div class="mb-4">
                                 <label for="editServiceDescription" class="block text-sm font-bold">Description</label>
-                                <textarea id="editServiceDescription" class="border border-gray-300 rounded w-full p-2" rows="3" required></textarea>
+                                <textarea id="editServiceDescription" class="border border-gray-300 rounded w-full p-2"
+                                    rows="3" required></textarea>
                             </div>
                             <div class="mb-4">
                                 <label for="editServicePrice" class="block text-sm font-bold">Price</label>
-                                <input type="number" id="editServicePrice" class="border border-gray-300 rounded w-full p-2" required />
+                                <input type="number" id="editServicePrice"
+                                    class="border border-gray-300 rounded w-full p-2" required />
                             </div>
                             <div class="mb-4">
                                 <label for="editServicePriceType" class="block text-sm font-bold">Price Type</label>
@@ -171,16 +175,21 @@
                                 </select>
                             </div>
                             <div class="mb-4">
-                                <label for="editServiceContactEmail" class="block text-sm font-bold">Contact Email</label>
-                                <input type="email" id="editServiceContactEmail" class="border border-gray-300 rounded w-full p-2" />
+                                <label for="editServiceContactEmail" class="block text-sm font-bold">Contact
+                                    Email</label>
+                                <input type="email" id="editServiceContactEmail"
+                                    class="border border-gray-300 rounded w-full p-2" />
                             </div>
                             <div class="mb-4">
-                                <label for="editServiceContactNumber" class="block text-sm font-bold">Contact Number</label>
-                                <input type="text" id="editServiceContactNumber" class="border border-gray-300 rounded w-full p-2" />
+                                <label for="editServiceContactNumber" class="block text-sm font-bold">Contact
+                                    Number</label>
+                                <input type="text" id="editServiceContactNumber"
+                                    class="border border-gray-300 rounded w-full p-2" />
                             </div>
                             <div class="mb-4">
                                 <label for="editServiceArea" class="block text-sm font-bold">Service Area</label>
-                                <input type="number" id="editServiceArea" class="border border-gray-300 rounded w-full p-2" />
+                                <input type="number" id="editServiceArea"
+                                    class="border border-gray-300 rounded w-full p-2" />
                             </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-bold">Uploaded Images</label>
@@ -189,17 +198,22 @@
                             </div>
                             <div class="mb-4">
                                 <label for="editServiceImages" class="block text-sm font-bold">Add Photos</label>
-                                <input type="file" id="editServiceImages" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-light file:text-white hover:file:bg-primary" multiple />
-                                <p class="text-xs text-gray-500 mt-1">You can upload up to 5 images total, including the previously uploaded ones.</p>
+                                <input type="file" id="editServiceImages"
+                                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-light file:text-white hover:file:bg-primary"
+                                    multiple />
+                                <p class="text-xs text-gray-500 mt-1">You can upload up to 5 images total, including the
+                                    previously uploaded ones.</p>
                             </div>
                             <div class="flex justify-end space-x-4">
-                                <button type="button" class="bg-gray-300 text-black px-4 py-2 rounded-lg" id="cancelEditService">Cancel</button>
-                                <button type="submit" class="bg-primary text-white px-4 py-2 rounded-lg">Save Changes</button>
+                                <button type="button" class="bg-gray-300 text-black px-4 py-2 rounded-lg"
+                                    id="cancelEditService">Cancel</button>
+                                <button type="submit" class="bg-primary text-white px-4 py-2 rounded-lg">Save
+                                    Changes</button>
                             </div>
                         </form>
                     </div>
                 </div>
-                
+
 
 
                 <!-- Reviews Section -->
@@ -216,38 +230,130 @@
                 <div id="profile" class="dashboard-section hidden">
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <h3 class="text-xl font-bold mb-6">Profile Settings</h3>
-                        <form id="profileForm" class="space-y-6">
+
+                        <!-- Profile Photo Section -->
+                        <div class="flex flex-col items-center mb-6">
+                            <!-- Profile Image -->
+                            <div class="relative w-32 h-32">
+                                <img id="profilePhoto" src="https://via.placeholder.com/128" alt="Profile Photo"
+                                    class="w-full h-full rounded-full shadow-lg border-4 border-gray-200 border object-cover">
+                                <!-- Edit Icon -->
+                                <label for="uploadPhoto"
+                                    class="absolute bottom-0 right-0 bg-blue-600 text-white rounded-full p-2 cursor-pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7" />
+                                    </svg>
+                                </label>
+                                <input id="uploadPhoto" type="file" accept="image/*" class="hidden">
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2">Click to change profile photo</p>
+                        </div>
+
+                        <!-- Profile Form -->
+                        <div id="profileForm" class="space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
-                                    <input type="text" id="firstName" class="w-full p-3 border rounded-lg">
+                                    <input type="text" id="firstName" class="w-full p-3 border rounded-lg" disabled>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
-                                    <input type="text" id="lastName" class="w-full p-3 border rounded-lg">
+                                    <input type="text" id="lastName" class="w-full p-3 border rounded-lg" disabled>
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                                <input type="email" id="email" class="w-full p-3 border rounded-lg">
+                                <input type="email" id="email" class="w-full p-3 border rounded-lg" disabled>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
-                                <input type="tel" id="phone" class="w-full p-3 border rounded-lg">
+                                <input type="tel" id="phone" class="w-full p-3 border rounded-lg" disabled>
+                            </div>
+                            <div class="flex justify-end space-x-4">
+                                <button id="editProfileBtn"
+                                    class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-light transition-colors">
+                                    Edit
+                                </button>
+                                <button id="changePasswordBtn"
+                                    class="bg-blue-700 text-white px-6 py-2 rounded-lg hover:bg-blue-400 transition-colors">
+                                    Change Password
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Profile Modal -->
+                <div id="editProfileModal"
+                    class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
+                        <h3 class="text-lg font-bold mb-4">Edit Profile</h3>
+                        <form id="editProfileForm" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                                    <input type="text" id="editFirstName" class="w-full p-3 border rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                                    <input type="text" id="editLastName" class="w-full p-3 border rounded-lg">
+                                </div>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
-                                <textarea id="address" class="w-full p-3 border rounded-lg"></textarea>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input type="email" id="editEmail" class="w-full p-3 border rounded-lg">
                             </div>
-                            <div class="flex justify-end">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                                <input type="tel" id="editPhone" class="w-full p-3 border rounded-lg">
+                            </div>
+                            <div class="flex justify-end space-x-4">
+                                <button type="button" id="cancelEditBtn"
+                                    class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors">
+                                    Cancel
+                                </button>
                                 <button type="submit"
-                                    class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-light transition-colors">
+                                    class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-light transition-colors">
                                     Save Changes
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
+
+                <!-- Change Password Modal -->
+                <div id="changePasswordModal"
+                    class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+                        <h3 class="text-lg font-bold mb-4">Change Password</h3>
+                        <form id="changePasswordForm" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                                <input type="password" id="currentPassword" class="w-full p-3 border rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                                <input type="password" id="newPassword" class="w-full p-3 border rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                                <input type="password" id="confirmNewPassword" class="w-full p-3 border rounded-lg">
+                            </div>
+                            <div class="flex justify-end space-x-4">
+                                <button type="button" id="cancelPasswordBtn"
+                                    class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors">
+                                    Cancel
+                                </button>
+                                <button type="submit"
+                                    class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-light transition-colors">
+                                    Update Password
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

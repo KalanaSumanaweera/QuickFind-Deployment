@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/userProfile.controller');
-const { updateUserProfilePhoto } = require('../controllers/userProfile.controller');
 const multer = require('multer');
-// Route to get user profile by ID
-router.get('/:id', userController.getUserProfile);
 
-const profiles = multer({ dest: 'profileImg/' });
+// router.get('/service/provider/:id', getServiceProviderDetails);//
 
-router.patch('/create', profiles.array('profileImg', 1), updateUserProfilePhoto); 
+const { getUserProfile, updateUserProfile, changeUserPassword } = require('../controllers/userProfile.controller');
+
+router.get('/profile', getUserProfile);
+router.put('/profile', updateUserProfile);
+router.put('/profile/password', changeUserPassword);
 
 module.exports = router;

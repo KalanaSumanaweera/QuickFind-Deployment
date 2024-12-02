@@ -471,5 +471,133 @@ function removeImage(index) {
     document.getElementById('removedImages').value = JSON.stringify(removedImages);
 }
 
+// Fetch the user profile on page load
+document.addEventListener('DOMContentLoaded', async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('You are not logged in. Redirecting to login page...');
+        window.location.href = '/login'; // Redirect to login page if token is missing
+        return;
+    }
 
+    try {
+        const response = await fetch('http://localhost:3000/api/user/profile', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch user profile');
+        }
+
+        const user = await response.json();
+
+        // Populate user profile fields
+        document.getElementById('profilePhoto').src = user.photoURL || 'https://via.placeholder.com/128';
+        document.getElementById('firstName').value = user.firstName || '';
+        document.getElementById('lastName').value = user.lastName || '';
+        document.getElementById('email').value = user.email || '';
+        document.getElementById('phone').value = user.phone || '';
+
+    } catch (error) {
+        console.error('Error fetching user profile:', error.message);
+        alert('Failed to fetch user profile. Please try again.');
+    }
+});
+
+// Show edit profile modal
+document.getElementById('editProfileBtn').addEventListener('click', () => {
+    document.getElementById('editProfileModal').classList.remove('hidden');
+
+    // Pre-fill edit form with current profile data
+    document.getElementById('editFirstName').value = document.getElementById('firstName').value;
+    document.getElementById('editLastName').value = document.getElementById('lastName').value;
+    document.getElementById('editEmail').value = document.getElementById('email').value;
+    document.getElementById('editPhone').value = document.getElementById('phone').value;
+});
+
+// Save changes in profile
+document.getElementById('editProfileForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const token = localStorage.getItem('token');
+    const updatedData = {
+        firstName: document.getElementById('editFirstName').value,
+        lastName: document.getElementById('editLastName').value,
+        email: document.getElementById('editEmail').value,
+        phone: document.getElementById('editPhone').value
+    };
+
+    try {
+        const response = await fetch('http://localhost:3000/api/user/profile', {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update profile');
+        }
+
+        alert('Profile updated successfully');
+        window.location.reload(); // Reload to update profile view
+
+    } catch (error) {
+        console.error('Error updating profile:', error.message);
+        alert('Failed to update profile. Please try again.');
+    }
+});
+
+// Cancel editing profile
+document.getElementById('cancelEditBtn').addEventListener('click', () => {
+    document.getElementById('editProfileModal').classList.add('hidden');
+});
+
+// Show change password modal
+document.getElementById('changePasswordBtn').addEventListener('click', () => {
+    document.getElementById('changePasswordModal').classList.remove('hidden');
+});
+
+// Change password
+document.getElementById('changePasswordForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const token = localStorage.getItem('token');
+    const passwordData = {
+        oldPassword: document.getElementById('currentPassword').value,
+        newPassword: document.getElementById('newPassword').value
+    };
+
+    try {
+        const response = await fetch('http://localhost:3000/api/user/profile/password', {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(passwordData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to change password');
+        }
+
+        alert('Password changed successfully');
+        document.getElementById('changePasswordModal').classList.add('hidden');
+
+    } catch (error) {
+        console.error('Error changing password:', error.message);
+        alert('Failed to change password. Please try again.');
+    }
+});
+
+// Cancel changing password
+document.getElementById('cancelPasswordBtn').addEventListener('click', () => {
+    document.getElementById('changePasswordModal').classList.add('hidden');
+});
 
