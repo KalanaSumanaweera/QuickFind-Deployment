@@ -3,16 +3,9 @@ const router = express.Router();
 const path = require('path');
 
 
-// Serve index.html for customers
-router.get('/home', (req, res) => {
-    // res.sendFile(path.join(__dirname, '../../../frontend/pages/auth/index.html'));
-    res.sendFile(path.join(__dirname, '../../../frontend/pages/auth/index.html')); //this is the development forntend
-});
-
 // Serve login.html
 router.get('/loginpage', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../../frontend/pages/auth/login.html'));
-    
+    res.sendFile(path.join(__dirname, '../../../frontend/pages/auth/login.html')); 
 });
 
 // Serve provider-dashboard.html 

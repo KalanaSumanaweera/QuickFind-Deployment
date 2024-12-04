@@ -15,10 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Show alert if 'message' query parameter is present
     const message = getQueryParam('message');
     if (message) {
-        Swal.fire({
-            title: message,
-            icon: "success",
-        }).then(() => {
+        showAlert('done', message).then(() => {
             // Remove 'message' parameter from the URL
             const url = new URL(window.location.href);
             url.searchParams.delete('message');
@@ -71,11 +68,11 @@ document.addEventListener('DOMContentLoaded', function () {
         return /^(0?77|0?76|0?74|0?71|0?72|0?75|0?78|0?79|0?70)\d{6,7}$/.test(phone);// For Sri Lankan numbers starting with 0 and 10 digits
     }
 
-    function showAlert(title, text, icon) {
-        Swal.fire({ title, text, icon });
-    }
+    // function showAlert(title, text, icon) {
+    //     Swal.fire({ title, text, icon });
+    // }
 
-    //Here is the login
+    // Login functionality
     if (loginForm) {
         // Check if there are saved credentials in localStorage
         const savedEmail = localStorage.getItem('savedEmail');
@@ -93,9 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const password = document.getElementById('password').value;
             const rememberMe = document.getElementById('remember').checked;
 
-            if (!isValidEmail(email)) return showAlert("Invalid Email", "Please enter a valid email.", "warning");
-
-            console.log('Login attempt:', { email, password });
+            if (!isValidEmail(email)) return showAlert("warning", "Please enter a valid email.");
 
             try {
                 const response = await fetch('api/auth/login', {
@@ -107,7 +102,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 const data = await response.json();
-                console.log('Login response:', data);
 
                 if (response.ok) {
                     localStorage.setItem('token', data.token);
@@ -122,36 +116,24 @@ document.addEventListener('DOMContentLoaded', function () {
                         localStorage.removeItem('savedPassword');
                     }
 
-                    Swal.fire({
-                        title: "Login Successful",
-                        icon: "success"
-                    }).then(() => {
-
+                    showAlert('done', 'Login Successful!').then(() => {
                         if (data.user.role == "customer") {
-                            window.location.href = '/home';
+                            window.location.href = '/';
                         } else if (data.user.role == "service_provider") {
                             window.location.href = '/provider-dashboard';
                         }
                     });
                 } else {
-                    Swal.fire({
-                        title: "Login failed!",
-                        text: data.message,
-                        icon: "warning"
-                    });
+                    showAlert('warning', data.message || 'Invalid credentials!');
                 }
             } catch (error) {
                 console.error('Login error:', error);
-                Swal.fire({
-                    title: "Login Failed!",
-                    text: "Please try again later.",
-                    icon: "warning"
-                });
+                showAlert('error', 'Login Failed!')
             }
         });
     }
 
-    //Here is the signup
+    // Signup functionality
     if (signupForm) {
         signupForm.addEventListener('submit', async function (e) {
             e.preventDefault();
@@ -161,18 +143,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const phone = document.getElementById('phone').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-
-            // const service_provider = document.getElementById('service_provider').value;
             const role = document.querySelector('input[name="accountType"]:checked').value;
-            // const customer = document.getElementById('customer').value;
 
-            if (!isValidEmail(email)) return showAlert("Invalid Email", "Please enter a valid email.", "warning");
-            if (!isValidPhoneNumber(phone)) return showAlert("Invalid Phone Number", "Please enter a valid Sri Lankan number.", "warning");
-            // if (!isValidPassword(password) || password !== confirmPassword) return showAlert("Passwords don't match", "Check your passwords.", "warning");
-
-            // Clear previous error messages
-            document.getElementById("passwordError").innerHTML = "";
-            document.getElementById("confirmPasswordError").innerHTML = "";
+            if (!isValidEmail(email)) return showAlert("warning", "Please enter a valid email.");
+            if (!isValidPhoneNumber(phone)) return showAlert("warning", "Please enter a valid Sri Lankan number.");
+            if (password !== confirmPassword) return showAlert('warning', 'Please recheck your passwords.');
 
             // Validate password rules
             const errors = validatePassword(password);
@@ -180,29 +155,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 const passwordErrorContainer = document.getElementById("passwordError");
                 passwordErrorContainer.innerHTML = errors.map(err => `<p class="text-red-500 text-sm">${err}</p>`).join("");
                 return false;
-            }
-
-            console.log('Signup attempt:', { firstName, lastName, email, phone, password, role }); // Log signup attempt
-
-            const phoneRegex = /^[0-9]{10}$/; // Example for a 10-digit phone number
-            // Regular expression to validate phone number fob2rmat
-
-            if (!phoneRegex.test(phone)) {
-                Swal.fire({
-                    title: "Invalid Phone Number!",
-                    text: "Please enter a valid 10-digit phone number.",
-                    icon: "warning"
-                });
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                Swal.fire({
-                    title: "Passwords don't match!",
-                    text: "Please recheck your passwords.",
-                    icon: "warning"
-                });
-                return;
             }
 
             try {
@@ -222,29 +174,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 const data = await response.json();
-                console.log('Registration response:', data); // Log the response
 
                 if (response.ok) {
-                    Swal.fire({
-                        title: "Registration successful!",
-                        text: "Please log in.",
-                        icon: "success"
-                    }).then(() => {
-                        window.location.href = '/loginpage';
-                    });
+                    showAlert('done', 'Registration successful! Please log in.')
+                        .then(() => {
+                            setTimeout(() => {
+                                window.location.href = '/loginpage';
+                            }, 2000); // Delay the redirection by 2 seconds
+                        });
                 } else {
-                    Swal.fire({
-                        title: "Registration failed.",
-                        text: data.message,
-                        icon: "warning"
-                    });
+                    showAlert('warning', 'Registration failed.');
                 }
             } catch (error) {
                 console.error('Registration error:', error);
-                Swal.fire({
-                    title: "Registration failed. Please try again",
-                    icon: "warning"
-                });
+                showAlert('warning', 'Registration failed. Please try again')
             }
         });
     }
@@ -305,20 +248,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
             if (response.ok) {
-                Swal.fire({
-                    title: "Password reset link has been sent to your email!",
-                    text: "Please Check the email",
-                    icon: "success"
-                }).then(() => {
+                showAlert('done', 'Password reset link has been sent to your email!')
+                .then(() => {
                     forgotPasswordForm.reset();
                     toggleVisibility(forgotPasswordForm, loginForm);
                 });
             } else {
-                Swal.fire({
-                    title: "Failed to send reset link. Please try again.",
-                    text: data.message,
-                    icon: "warning"
-                });
+                showAlert('error', data.message)
             }
 
 

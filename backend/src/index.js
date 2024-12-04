@@ -175,7 +175,7 @@ app.use('/icons', express.static(path.join(__dirname, '../../frontend/icons')));
 
 // Root route: Send the login page
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../frontend/pages/auth/login.html'));
+    res.sendFile(path.join(__dirname, '../../frontend/pages/auth/index.html'));
 });
 
 // Middleware configurations

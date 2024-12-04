@@ -26,3 +26,30 @@
         grid-template-columns: repeat(3, 1fr);
     }
 }
+
+/* Default Off-Canvas State */
+#navbar {
+    transform: translateX(-100%); /* Hidden off-screen */
+  }
+  
+  /* Active State */
+  #navbar.active {
+    transform: translateX(0); /* Visible on-screen */
+  }
+  
+  /* Fullscreen Overlay for Menu */
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 40; /* Below navbar */
+  }
+  
+  .overlay.active {
+    display: block;
+  }
+  
