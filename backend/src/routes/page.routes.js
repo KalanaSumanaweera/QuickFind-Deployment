@@ -6,7 +6,7 @@ const path = require('path');
 // Serve index.html for customers
 router.get('/home', (req, res) => {
     // res.sendFile(path.join(__dirname, '../../../frontend/pages/auth/index.html'));
-    res.sendFile(path.join(__dirname, '../../../frontend/pages/developmentPage.html')); //this is the development forntend
+    res.sendFile(path.join(__dirname, '../../../frontend/pages/auth/index.html')); //this is the development forntend
 });
 
 // Serve login.html

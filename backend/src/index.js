@@ -121,6 +121,7 @@ const userProfileRoutes = require('./routes/userProfile.routes');
 const serviceRoutes = require('./routes/service.routes');
 const categoryRoutes = require('./routes/categories.routes');
 const providerDashboardRoutes = require('./routes/providerDashboard.route');
+const homePageRoutes = require("./routes/homePage.routes");
 
 // Import Sequelize associations
 require('./models/associations');
@@ -169,6 +170,8 @@ app.use(express.static(path.join(__dirname, '../../frontend')));
 
 app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
 
+app.use('/icons', express.static(path.join(__dirname, '../../frontend/icons')));
+
 
 // Root route: Send the login page
 app.get('/', (req, res) => {
@@ -202,6 +205,7 @@ app.use('/api/auth', authRoutes); // Authentication routes
 app.use('/api/service', serviceRoutes); // Service-related routes
 app.use('/api/categories', categoryRoutes); // Category-related routes
 app.use('/api/providerDashboard', providerDashboardRoutes);
+app.use("/api/homepage", homePageRoutes);
 
 
 // 404 Handler for undefined routes
