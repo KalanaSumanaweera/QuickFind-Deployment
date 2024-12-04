@@ -4,3 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
     url.searchParams.delete('token');
     window.history.replaceState(null, '', url);
 });
+
+document.getElementById("menu-toggle").addEventListener("click", function () {
+    const navbar = document.getElementById("navbar");
+    navbar.classList.toggle("hidden");
+  });

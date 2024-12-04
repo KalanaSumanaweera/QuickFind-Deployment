@@ -10,8 +10,11 @@
   <link rel="stylesheet" href="../styles/global.css">
   <link rel="icon" type="png" href="../icons/quickfind logo .png">
   <script src="../../js/tailwind-config.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
-<style>
+
+  <style>
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -80,26 +83,168 @@
   </script>
 
 
-  <header class="bg-primary text-white p-4 animate-fadeIn">
-    <div class="container mx-auto flex justify-between items-center">
-      <!-- Logo -->
-      <img src="../icons/quickfind logo .png" style="height:50px;" alt="logo">
 
-      <!-- Navigation Items (Inline) -->
-      <nav class="flex items-center space-x-6">
-        <a href="#" class="hover:text-primary-light transition duration-300">How It Works</a>
-        <a href="#" class="hover:text-primary-light transition duration-300">For Providers</a>
+  <!-- Header Section -->
+  <!-- <header class="bg-primary text-white p-2 animate-fadeIn">
+  <div class="container mx-auto flex justify-between items-center flex-wrap sm:flex-nowrap"> -->
+  <!-- Logo Section -->
+  <!-- <div class="flex items-center space-x-2"> -->
+  <!-- Logo -->
+  <!-- <img src="../icons/quickfind logo .png" class="h-12 sm:h-16 lg:ms-3" alt="logo"> -->
 
-        <!-- Profile Button with Rounded Display Picture -->
-        <a href="userProfile.html" class="flex items-center space-x-2 hover:text-primary-light transition duration-300">
-          <!-- Placeholder for Display Picture -->
-          <span>Profile</span>
-
-          <img id="profile-picture" src="" alt="Profile Picture" class="w-8 h-8 rounded-full border">
+  <!-- Language Buttons -->
+  <!-- <div class="flex space-x-2 hidden lg:block">
+        <a href="#" class="text-xs py-1 px-2 ms-4 bg-white text-primary rounded hover:bg-gray-200 transition duration-300 lg:text-base lg:py-2 lg:px-4">
+          සිංහල
         </a>
+        <a href="#" class="text-xs py-1 px-2 bg-white text-primary rounded hover:bg-gray-200 transition duration-300 lg:text-base lg:py-2 lg:px-4">
+          தமிழ்
+        </a>
+      </div>
+    </div> -->
+
+  <!-- Navigation Section -->
+  <!-- <nav class="flex items-center space-x-4"> -->
+  <!-- Message Icon (Large Devices Only) -->
+  <!-- <a href="#" class="hidden lg:block text-xs hover:text-primary-light transition duration-300 lg:text-base">
+        <i class="fa-solid fa-envelope text-sm lg:text-2xl"></i>
+      </a> -->
+  <!-- <a href="#" class="hidden lg:block text-xs hover:text-primary-light transition duration-300 lg:text-base">
+        <i class="fa-solid fa-comment text-sm lg:text-base"></i>
+      </a>
+      <a href="#" class="hidden lg:block text-xs hover:text-primary-light transition duration-300 lg:text-base">
+        <i class="fa-solid fa-comments text-sm lg:text-base"></i>
+      </a> -->
+
+  <!-- Post Your Ad Button (Hidden on Small Devices, Medium Size on Large Devices) -->
+  <!-- <a href="#" class="hidden sm:block text-xs bg-primary-light text-white py-1 px-2 rounded hover:bg-blue-300 transition duration-300 lg:text-base lg:py-2 lg:px-4">
+        Post Your Ad
+      </a> -->
+
+  <!-- Profile Section -->
+  <!-- <a href="userProfile.html" class="flex items-center space-x-2 text-xs hover:text-primary-light transition duration-300 lg:text-base"> -->
+  <!-- Profile Text (Hidden on Small Devices) -->
+  <!-- <span class="hidden sm:block">Profile</span>
+        <img id="profile-picture" src="" alt="Profile Picture" class="w-6 h-6 rounded-full border lg:w-7 lg:h-7">
+      </a>
+    </nav>
+  </div>
+</header> -->
+
+  <!-- Header Section -->
+  <header class="bg-primary text-white p-2 animate-fadeIn">
+    <div class="container mx-auto flex justify-between items-center flex-wrap sm:flex-nowrap">
+      <!-- Logo Section -->
+      <div class="flex items-center space-x-2">
+        <!-- Logo -->
+        <img src="../icons/quickfind logo .png" class="h-12 sm:h-16 lg:ms-3" alt="logo">
+        <!-- Language Buttons -->
+        <div class="flex space-x-2 hidden lg:block">
+          <a href="#"
+            class="text-xs py-1 px-2 ms-4 bg-white text-primary rounded hover:bg-gray-200 transition duration-300 lg:text-base lg:py-2 lg:px-4">
+            සිංහල
+          </a>
+          <a href="#"
+            class="text-xs py-1 px-2 bg-white text-primary rounded hover:bg-gray-200 transition duration-300 lg:text-base lg:py-2 lg:px-4">
+            தமிழ்
+          </a>
+        </div>
+      </div>
+
+
+      <!-- Hamburger Icon for Small Devices -->
+      <button id="menu-toggle" class="block lg:hidden text-white text-2xl focus:outline-none">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <!-- Navigation Section for Large Devices -->
+      <nav class="hidden lg:flex items-center space-x-4">
+        <!-- Message Icon -->
+        <a href="#" class="text-xs hover:text-primary-light transition duration-300 lg:text-base">
+          <i class="fa-solid fa-envelope text-sm lg:text-2xl"></i>
+        </a>
+
+        <!-- Post Your Ad Button -->
+        <a href="#"
+          class="text-xs bg-primary-light text-white py-1 px-2 rounded hover:bg-blue-300 transition duration-300 lg:text-base lg:py-2 lg:px-4">
+          Post Your Ad
+        </a>
+
+        <!-- Profile Section -->
+        <a href="userProfile.html"
+          class="flex items-center space-x-2 text-xs hover:text-primary-light transition duration-300 lg:text-base">
+          <span class="hidden sm:block">Profile</span>
+          <img id="profile-picture" src="" alt="Profile Picture" class="w-6 h-6 rounded-full border lg:w-7 lg:h-7">
+        </a>
+      </nav>
+
+      <!-- Dropdown Menu for Small Devices -->
+      <nav id="navbar" class="hidden w-full lg:hidden">
+        <ul class="flex flex-col space-y-2 mt-4 bg-primary-light p-4 rounded shadow-lg">
+          <!-- Language List Items -->
+          <li>
+            <a href="#"
+              class="block text-xs py-2 px-4 bg-white text-primary rounded hover:bg-gray-100 transition duration-300">
+              සිංහල
+            </a>
+          </li>
+          <li>
+            <a href="#"
+              class="block text-xs py-2 px-4 bg-white text-primary rounded hover:bg-gray-100 transition duration-300">
+              தமிழ்
+            </a>
+          </li>
+
+          <!-- Message Icon as List Item -->
+          <li>
+            <a href="#" class="block text-xs py-2 px-4 text-white hover:bg-blue-300 transition duration-300">
+              <i class="fa-solid fa-comments text-sm"></i> Chat
+            </a>
+          </li>
+
+          <!-- Post Your Ad Button -->
+          <li>
+            <a href="#"
+              class="block text-xs py-2 px-4 bg-primary-light text-white rounded hover:bg-blue-300 transition duration-300">
+              Post Your Ad
+            </a>
+          </li>
+
+          <!-- Profile Section -->
+          <li>
+            <a href="userProfile.html"
+              class="flex items-center space-x-2 text-xs py-2 px-4 text-white hover:text-primary-light transition duration-300">
+              <span>Profile</span>
+              <img id="profile-picture" src="" alt="Profile Picture" class="w-6 h-6 rounded-full border">
+            </a>
+          </li>
+        </ul>
       </nav>
     </div>
   </header>
+
+
+
+  <!-- Start Making Money Section (Small Devices Only) -->
+  <section class="bg-white p-6 mt-4 sm:hidden">
+    <div class="container mx-auto text-center">
+      <!-- Icon and Title -->
+      <div class="flex flex-col items-center">
+        <img src="https://via.placeholder.com/80" alt="Money Bag Icon" class="mb-4">
+        <h2 class="text-lg font-semibold">Start making money!</h2>
+        <p class="text-sm text-gray-600 mt-2">
+          Do you have something to sell? Post your first ad and start making money!
+        </p>
+      </div>
+      <!-- Post Ad Button -->
+      <div class="mt-4">
+        <a href="#"
+          class="bg-primary-light text-white py-2 px-6 rounded-full text-sm hover:bg-blue-300 transition duration-300">
+          Post your ad for free
+        </a>
+      </div>
+    </div>
+  </section>
 
 
 
@@ -190,11 +335,71 @@
     </section>
   </main>
 
-  <!-- footer -->
-  <footer class="bg-primary text-white py-4 text-center animate-fadeIn">
-    <p>&copy; 2024 QuickFind.LK. All rights reserved.</p>
-  </footer>
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white py-6">
+    <div class="container mx-auto px-4">
+      <!-- About Us, Quick Links, Help & Support, and Follow Us Sections -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- About Us -->
+        <div>
+          <h4 class="text-lg font-bold mb-2">About QuickFind.LK</h4>
+          <p class="text-secondary text-sm">
+            QuickFind.LK is your go-to platform for finding trusted service providers across Sri Lanka. We connect you
+            with verified professionals for a seamless service experience.
+          </p>
+        </div>
 
+        <!-- Quick Links and Help & Support in Two Columns -->
+        <div class="grid grid-cols-2 gap-4 col-span-2">
+          <!-- Quick Links -->
+          <div>
+            <h4 class="text-lg font-bold mb-2">Quick Links</h4>
+            <ul class="space-y-1 text-sm">
+              <li><a href="#" class="hover:text-primary-light transition duration-300">Home</a></li>
+              <li><a href="#" class="hover:text-primary-light transition duration-300">How It Works</a></li>
+              <li><a href="#" class="hover:text-primary-light transition duration-300">For Providers</a></li>
+              <li><a href="#" class="hover:text-primary-light transition duration-300">Contact Us</a></li>
+            </ul>
+          </div>
+
+          <!-- Help & Support -->
+          <div>
+            <h4 class="text-lg font-bold mb-2">Help & Support</h4>
+            <ul class="space-y-1 text-sm">
+              <li><a href="#" class="hover:text-primary-light transition duration-300">FAQs</a></li>
+              <li><a href="#" class="hover:text-primary-light transition duration-300">Privacy Policy</a></li>
+              <li><a href="#" class="hover:text-primary-light transition duration-300">Terms & Conditions</a></li>
+              <li><a href="#" class="hover:text-primary-light transition duration-300">Contact Us</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Follow Us -->
+        <div>
+          <h4 class="text-lg font-bold mb-2">Follow Us</h4>
+          <div class="flex space-x-2">
+            <a href="#" class="hover:text-primary-light text-white">
+              <i class="fab fa-facebook text-2xl"></i>
+            </a>
+            <a href="#" class="hover:text-primary-light text-white">
+              <i class="fab fa-twitter text-2xl"></i>
+            </a>
+            <a href="#" class="hover:text-primary-light text-white">
+              <i class="fab fa-instagram text-2xl"></i>
+            </a>
+            <a href="#" class="hover:text-primary-light text-white">
+              <i class="fab fa-linkedin text-2xl"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Bottom -->
+      <div class="mt-6 border-t border-white/30 pt-2 text-center text-sm">
+        <p>&copy; 2024 QuickFind.LK. All rights reserved. Powered by QuickFind Team.</p>
+      </div>
+    </div>
+  </footer>
 
   <script src="../js/search.js"></script>
   <script src="../js/category.js"></script>
