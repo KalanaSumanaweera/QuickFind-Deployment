@@ -1,5 +1,21 @@
 // dashboard.js
 
+const toggleSidebar = document.getElementById('toggleSidebarButton');
+const sidebar = document.getElementById('sidebar');
+
+toggleSidebar.addEventListener('click', () => {
+    // Toggle sidebar visibility
+    const isVisible = !sidebar.classList.contains('-translate-x-full');
+    sidebar.classList.toggle('-translate-x-full');
+
+    // Update toggle button position to move with sidebar
+    if (isVisible) {
+        toggleSidebar.style.transform = 'translateX(0)';
+    } else {
+        toggleSidebar.style.transform = 'translateX(16rem)'; // Sidebar width
+    }
+});
+
 // Authentication Check
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');

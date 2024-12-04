@@ -199,7 +199,7 @@ app.use(passport.initialize());
 app.use('/', pageRoutes); // Page-related routes
 app.use('/api/auth', authRoutes); // Authentication routes
 app.use('/api/service', serviceRoutes); // Service-related routes
-app.use('/api/categories', categoryRoutes); // Category-related routes
+app.use('/api/categories', categoryRoutes); 
 app.use('/api/providerDashboard', providerDashboardRoutes);
 
 // 404 Handler for undefined routes
