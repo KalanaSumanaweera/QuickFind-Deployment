@@ -7,7 +7,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBmHanXe7Yt1gHl4mPmLEMfyZEzn9vdR0Q",
+  apiKey:"get the API key from .env",
   authDomain: "quickfind-4ff60.firebaseapp.com",
   projectId: "quickfind-4ff60",
   storageBucket: "quickfind-4ff60.appspot.com",
