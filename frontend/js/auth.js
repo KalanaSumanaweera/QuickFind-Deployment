@@ -117,11 +117,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
                     showAlert('done', 'Login Successful!').then(() => {
-                        if (data.user.role == "customer") {
+                        // if (data.user.role == "customer") {
                             window.location.href = '/';
-                        } else if (data.user.role == "service_provider") {
-                            window.location.href = '/provider-dashboard';
-                        }
+                        // } else if (data.user.role == "service_provider") {
+                            // window.location.href = '/';
+                        // }
                     });
                 } else {
                     showAlert('warning', data.message || 'Invalid credentials!');

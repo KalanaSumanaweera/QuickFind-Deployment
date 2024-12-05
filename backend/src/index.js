@@ -1,123 +1,18 @@
-// require('dotenv').config({ path: './src/.env' });
-// const path = require('path');
-// const express = require('express');
-// const cors = require('cors');
-// const bodyParser = require('body-parser');
-// const helmet = require('helmet');
-// const morgan = require('morgan');
-// const sequelize = require('./config/database');
-// const authRoutes = require('./routes/auth.routes');
-// const pageRoutes = require('./routes/page.routes');
-// const serviceAdd = require('./routes/service.routes');
-// const categoryRoutes = require('./routes/categories.routes');
-// require('./models/associations'); // Sequelize associations
-// const crypto = require('crypto');
-// const passport = require('passport');
-// const allowedOrigins = ['http://localhost:3000', 'http://127.0.0.1:5500'];
-
-// require('./config/passport')(passport); // Load Passport configuration
-
-// const app = express();
-
-// // Middleware to generate a nonce for each request
-// app.use((req, res, next) => {
-//     const nonce = crypto.randomBytes(16).toString('base64');
-//     res.locals.nonce = nonce; // Store nonce for use in CSP
-//     next();
-// });
-
-// // Helmet configuration for Content Security Policy
-// app.use(
-//     helmet.contentSecurityPolicy({
-//         directives: {
-//             defaultSrc: ["'self'"],
-//             scriptSrc: [
-//                 "'self'",
-//                 "https://cdn.tailwindcss.com",
-//                 "https://cdn.jsdelivr.net/npm/sweetalert2@11"
-//             ],
-//             styleSrc: [
-//                 "'self'",
-//                 "'unsafe-inline'",
-//                 "https://fonts.googleapis.com",
-//                 "https://cdnjs.cloudflare.com"
-//             ],
-//             fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
-//         },
-//     }));
-    
-
-// // Serve static files from the frontend directory
-// app.use(express.static(path.join(__dirname, '../../frontend')));
-
-// // Middleware configurations
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(cors({
-//     origin: (origin, callback) => {
-//         if (!origin || allowedOrigins.includes(origin)) {
-//             callback(null, true); // Allow the request
-//         } else {
-//             callback(new Error('Not allowed by CORS')); // Reject the request
-//         }
-//     },
-//     credentials: true // Allow sending cookies or auth headers
-// }));
-// app.use(morgan('dev'));
-// app.use(express.json());
-
-// // Initialize Passport
-// app.use(passport.initialize());
-
-// // Routes
-// app.use('/home', pageRoutes);
-// app.use('/api/auth', authRoutes);
-// app.use('/api/service/', serviceAdd)
-// app.use('/api/categories', categoryRoutes);
-
-// // Root route
-// app.get('/home', (req, res) => {
-//     res.send('Welcome to QuickFind!');
-// });
-
-// // Error handling middleware
-// app.use((err, req, res, next) => {
-//     console.error(err.stack);
-//     res.status(500).json({ error: 'Something went wrong!' });
-// });
-
-// // Start the server
-// const PORT = process.env.PORT || 3000;
-
-// sequelize
-//     .sync({ alter: true })
-//     .then(() => {
-//         console.log('Database connected and synchronized');
-//         app.listen(PORT, () => {
-//             console.log(`Server running on port ${PORT}`);
-//         });
-//     })
-//     .catch((err) => {
-//         console.error('Database connection error:', err);
-//     });
-
-
 
 require('dotenv').config({ path: './backend/src/.env' });
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
-const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const sequelize = require('./config/database');
 const crypto = require('crypto');
 const passport = require('passport');
+const axios = require('axios');
 
 // Import routes
 const authRoutes = require('./routes/auth.routes');
 const pageRoutes = require('./routes/page.routes');
-const userProfileRoutes = require('./routes/userProfile.routes');
 const serviceRoutes = require('./routes/service.routes');
 const categoryRoutes = require('./routes/categories.routes');
 const providerDashboardRoutes = require('./routes/providerDashboard.route');
@@ -129,99 +24,149 @@ require('./models/associations');
 // Import Passport configuration
 require('./config/passport')(passport);
 
-// Allowed origins for CORS
 const allowedOrigins = ['https://quickfind-38321514be2b.herokuapp.com', 'http://127.0.0.1:5500', 'http://localhost:3000'];
 
 const app = express();
 
-// Middleware to generate a nonce for each request (used in CSP)
+// Middleware to generate a nonce
 app.use((req, res, next) => {
-    const nonce = crypto.randomBytes(16).toString('base64');
-    res.locals.nonce = nonce; // Store nonce for use in CSP
+    res.locals.nonce = crypto.randomBytes(16).toString('base64');
     next();
 });
 
-// Helmet configuration for security headers
+// Helmet for CSP and other security headers
 app.use(
     helmet({
         contentSecurityPolicy: {
+            useDefaults: true,
             directives: {
                 defaultSrc: ["'self'"],
-                scriptSrc: [
-                    "'self'",
-                    "https://cdn.tailwindcss.com",
-                    "https://cdn.jsdelivr.net/npm/sweetalert2@11"
-                ],
                 styleSrc: [
                     "'self'",
                     "'unsafe-inline'",
-                    "https://fonts.googleapis.com",
-                    "https://cdnjs.cloudflare.com"
+                    "https://cdnjs.cloudflare.com",
                 ],
-                fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+                scriptSrc: [
+                    "'self'",
+                    (req, res) => `'nonce-${res.locals.nonce}'`,
+                    "https://cdn.tailwindcss.com",
+                    "https://cdn.jsdelivr.net/npm/sweetalert2@11",
+                    "https://www.gstatic.com/firebasejs/10.5.0",
+                    "https://www.gstatic.com",
+                    "https://firebase.googleapis.com",
+                    "https://www.google.com",
+                    "https://www.gstatic.com/recaptcha/",
+                    "https://www.payhere.lk",
+                    "https://sandbox.payhere.lk",
+                    "https://www.google-analytics.com",
+                    "https://maxcdn.bootstrapcdn.com",
+                    "'unsafe-inline'",
+                    "https://sandbox.payhere.lk/pay/resources/js/jquery.min.js",
+                    "https://sandbox.payhere.lk/pay/resources/js/common.js",
+                    "https://sandbox.payhere.lk/pay/resources/js/complete_error.js",
+                ],
+                connectSrc: [
+                    "'self'",
+                    "https://www.googleapis.com",
+                    "https://securetoken.googleapis.com",
+                    "https://firestore.googleapis.com",
+                    "https://www.gstatic.com",
+                    "https://www.google.com",
+                    "https://identitytoolkit.googleapis.com",
+                    "https://securetoken.googleapis.com",
+                    "https://sandbox.payhere.lk",
+                    "https://www.payhere.lk",
+                ],
+                frameSrc: [
+                    "'self'",
+                    "https://www.google.com/recaptcha/",
+                    "https://recaptcha.google.com/recaptcha/",
+                    "https://sandbox.payhere.lk",
+                    "https://www.payhere.lk",
+                ],
+                imgSrc: [
+                    "'self'",
+                    "data:",
+                    "https://www.gstatic.com",
+                ],
             },
         },
-        crossOriginEmbedderPolicy: false, // Optional, for older browsers or specific use cases
+        crossOriginEmbedderPolicy: false,
     })
 );
 
-// Serve static files (frontend)
+
+// Middleware
+app.use(express.json());
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+}));
+app.use(morgan('dev'));
+
+// Serve static files
 app.use(express.static(path.join(__dirname, '../../frontend')));
-
 app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
-
 app.use('/icons', express.static(path.join(__dirname, '../../frontend/icons')));
 
-
-// Root route: Send the login page
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../frontend/pages/auth/index.html'));
-});
-
-// Middleware configurations
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(
-    cors({
-        origin: (origin, callback) => {
-            if (!origin || allowedOrigins.includes(origin)) {
-                callback(null, true); // Allow the request
-            } else {
-                callback(new Error('Not allowed by CORS')); // Reject the request
-            }
-        },
-        credentials: true, // Allow cookies or auth headers
-    })
-);
-app.use(morgan('dev')); // HTTP request logging
-app.use(express.json()); // Parse JSON payloads
-
-// Initialize Passport
-app.use(passport.initialize());
-
 // Routes
-app.use('/', pageRoutes); // Page-related routes
-app.use('/api/auth', authRoutes); // Authentication routes
-app.use('/api/service', serviceRoutes); // Service-related routes
-app.use('/api/categories', categoryRoutes); // Category-related routes
+app.use('/', pageRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/service', serviceRoutes);
+app.use('/api/categories', categoryRoutes);
 app.use('/api/providerDashboard', providerDashboardRoutes);
 app.use("/api/homepage", homePageRoutes);
 
+// Payhere proxy endpoint
+app.get('/success', (req, res) => {
+    console.log('Payment successful');
+    res.send('Payment processed successfully');
+});
 
-// 404 Handler for undefined routes
+app.get('/cancel', (req, res) => {
+    console.log('Payment cancelled');
+    res.send('Payment was cancelled');
+});
+app.post('/payhere-proxy', async (req, res) => {
+    const { merchant_id, app_id, return_url, cancel_url, amount, currency, first_name, last_name, email, phone } = req.body;
+
+    // Validate required fields
+    if (!merchant_id || !app_id || !return_url || !cancel_url || !amount || !currency || !first_name || !last_name || !email || !phone) {
+        return res.status(400).json({ error: 'Missing required payment details' });
+    }
+
+    try {
+        const response = await axios.post('https://sandbox.payhere.lk/pay/checkoutJ', req.body, {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Payhere proxy error:', error.response?.data || error);
+        res.status(500).json({ error: 'Payment initialization failed', details: error.response?.data || error.message });
+    }
+});
+
+// 404 handler
 app.use((req, res) => {
     res.status(404).json({ error: 'Not Found' });
 });
 
-// Global error handler
+// Error handler
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ error: 'Something went wrong!' });
 });
 
-// Start the server and connect to the database
+// Start server
 const PORT = process.env.PORT || 3000;
-
 sequelize
     .sync({ alter: true })
     .then(() => {
@@ -233,5 +178,3 @@ sequelize
     .catch((err) => {
         console.error('Database connection error:', err);
     });
-
-    app.use(cors({ origin: 'http://localhost:3000' })); // Adjust as needed //

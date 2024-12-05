@@ -9,82 +9,20 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="../styles/global.css">
   <link rel="icon" type="png" href="../icons/quickfind logo .png">
+  <link rel="stylesheet" href="../../styles/global.css">
   <script src="../../js/tailwind-config.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
 
-  <style>
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-
-      to {
-        opacity: 1;
-      }
-    }
-
-    .animate-fadeIn {
-      animation: fadeIn 0.5s ease-in-out;
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateY(20px);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    .animate-slideIn {
-      animation: slideIn 0.5s ease-out;
-    }
-  </style>
+  
 
 <script src="../../js/navbar.js" defer></script>
 </head>
 
 <body class="bg-background font-sans">
 
-  <script>
-    // Extract token from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-
-    if (token) {
-      // Save token in local storage
-      localStorage.setItem('jwtToken', token);
-
-      // Decode the JWT manually
-      const base64Url = token.split('.')[1]; // Get the payload part of the token
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const decodedPayload = JSON.parse(atob(base64));
-
-      // Access profile picture URL from the decoded payload
-      const profilePictureUrl = decodedPayload.photoURL;
-
-      if (profilePictureUrl) {
-        const profileImage = document.querySelector('#profile-picture');
-        profileImage.src = profilePictureUrl; // Set the profile picture URL
-      }
-
-      // Remove the token from the URL without reloading the page
-      const currentUrl = window.location.href;
-      const urlWithoutToken = currentUrl.split('?')[0]; // Get the base URL without query parameters
-      history.replaceState({}, document.title, urlWithoutToken);
-
-    } else {
-      console.warn('Token not found in URL.');
-    }
-
-  </script>
-
-  <!-- Start Making Money Section (Small Devices Only) -->
+<!-- Start Making Money Section (Small Devices Only) -->
   <section class="bg-white p-6 mt-4 sm:hidden">
     <div class="container mx-auto text-center">
       <!-- Icon and Title -->

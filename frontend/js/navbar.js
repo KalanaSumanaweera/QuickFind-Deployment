@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const isLoggedIn = !!localStorage.getItem("token"); // Check if user is logged in
-    const user = JSON.parse(localStorage.getItem("user") || "{}"); // Get user data
+  const isLoggedIn = !!localStorage.getItem("token"); // Check if user is logged in
+  const user = JSON.parse(localStorage.getItem("user") || "{}"); // Get user data
 
-    const navbarHTML = `
+  const navbarHTML = `
     <!-- Header Section -->
     <header class="bg-primary text-white p-2 animate-fadeIn">
       <div class="container mx-auto flex justify-between items-center flex-wrap sm:flex-nowrap">
@@ -19,8 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
   
         <!-- Navigation Section for Large Devices -->
         <nav class="hidden lg:flex items-center space-x-4">
-                  <!-- Post Your Ad Button -->
-          <a href="#"
+          <!-- Post Your Ad Button -->
+          <a id="post-ad-button" 
             class="text-xs bg-green-500 text-white py-1 px-2 rounded hover:bg-green-700 transition duration-300 lg:text-base lg:py-2 lg:px-4">
             Post Your Ad
           </a>
@@ -140,53 +140,68 @@ document.addEventListener("DOMContentLoaded", () => {
     </nav>
     `;
 
-    // Inject the HTML into the body
-    document.body.insertAdjacentHTML("afterbegin", navbarHTML);
+  // Inject the HTML into the body
+  document.body.insertAdjacentHTML("afterbegin", navbarHTML);
 
-    // Add functionality for the off-canvas menu
-    const menuToggle = document.getElementById("menu-toggle");
-    const navbar = document.getElementById("navbar");
-    const overlay = document.createElement("div");
-    overlay.classList.add("overlay");
-    document.body.appendChild(overlay);
+  // Post Your Ad Button functionality
+  const postAdButton = document.getElementById("post-ad-button");
+  postAdButton?.addEventListener("click", (event) => {
+    if (!isLoggedIn) {
+      event.preventDefault(); // Prevent navigation
+      window.location.href = "/loginpage"; // Redirect to login page
+    } else {
+      // showAlert('Welcome! Redirecting to the provider dashboard...')
+      alert("Welcome! Redirecting to the provider dashboard...");
+      
+      window.location.href = "/provider-dashboard?showModal=true";// You can allow the navigation to proceed or add more logic if needed
+    }
+  });
 
-    // Toggle the navbar and overlay
-    menuToggle.addEventListener("click", () => {
-        navbar.classList.toggle("active");
-        overlay.classList.toggle("active");
-    });
 
-    // Close navbar when clicking on the overlay
-    overlay.addEventListener("click", () => {
-        navbar.classList.remove("active");
-        overlay.classList.remove("active");
-    });
+  // Add functionality for the off-canvas menu
+  const menuToggle = document.getElementById("menu-toggle");
+  const navbar = document.getElementById("navbar");
+  const overlay = document.createElement("div");
+  overlay.classList.add("overlay");
+  document.body.appendChild(overlay);
 
-    // Profile dropdown functionality for large screens
-    const profileButton = document.getElementById("profile-button");
-    const profileDropdown = document.getElementById("profile-dropdown");
+  // Toggle the navbar and overlay
+  menuToggle.addEventListener("click", () => {
+    navbar.classList.toggle("active");
+    overlay.classList.toggle("active");
+  });
 
-    profileButton?.addEventListener("click", () => {
-        profileDropdown.classList.toggle("hidden");
-    });
+  // Close navbar when clicking on the overlay
+  overlay.addEventListener("click", () => {
+    navbar.classList.remove("active");
+    overlay.classList.remove("active");
+  });
 
-    // Logout functionality
-    const logoutHandler = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        window.location.reload();
-    };
+  // Profile dropdown functionality for large screens
+  const profileButton = document.getElementById("profile-button");
+  const profileDropdown = document.getElementById("profile-dropdown");
 
-    const logoutButtonLg = document.getElementById("logout-button-lg");
-    const logoutButtonOffcanvas = document.getElementById("logout-button-offcanvas");
+  profileButton?.addEventListener("click", () => {
+    profileDropdown.classList.toggle("hidden");
+  });
 
-    logoutButtonLg?.addEventListener("click", logoutHandler);
-    logoutButtonOffcanvas?.addEventListener("click", logoutHandler);
+  // Logout functionality
+  const logoutHandler = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.reload();
+  };
 
-    // Close dropdown if clicking outside
-    document.addEventListener("click", (event) => {
-        if (!profileButton.contains(event.target) && !profileDropdown.contains(event.target)) {
-            profileDropdown.classList.add("hidden");
-        }
-    });
+  const logoutButtonLg = document.getElementById("logout-button-lg");
+  const logoutButtonOffcanvas = document.getElementById("logout-button-offcanvas");
+
+  logoutButtonLg?.addEventListener("click", logoutHandler);
+  logoutButtonOffcanvas?.addEventListener("click", logoutHandler);
+
+  // Close dropdown if clicking outside
+  document.addEventListener("click", (event) => {
+    if (!profileButton.contains(event.target) && !profileDropdown.contains(event.target)) {
+      profileDropdown.classList.add("hidden");
+    }
+  });
 });

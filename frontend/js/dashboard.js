@@ -3,6 +3,40 @@
 const toggleSidebar = document.getElementById('toggleSidebarButton');
 const sidebar = document.getElementById('sidebar');
 
+//show the model when redirecting from the home page.  add post
+document.addEventListener('DOMContentLoaded', () => {
+    // Check for the query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const showModal = urlParams.get('showModal');
+
+    // If the parameter is set, trigger the modal
+    if (showModal === 'true') {
+        console.log("Showing Add Service Modal...");
+
+        // Trigger the modal logic
+        const addServiceButton = document.getElementById('addServiceButton');
+        if (addServiceButton) {
+            showAddServiceModal();
+            // Clear the URL after loading 
+            const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname; 
+            window.history.pushState({ path: newUrl }, '', newUrl);
+      } else {
+            console.warn("Add Service Button not found!");
+        }
+    }
+});
+
+function showAddServiceModal() {
+    // Modal display logic goes here
+    console.log("Add Service Modal Triggered");
+    // Example: If using a library like Bootstrap or custom modal logic
+    const modal = document.getElementById('addServiceModal'); // Assume modal ID
+    if (modal) {
+        modal.style.display = 'block'; // Adjust logic based on your modal implementation
+    }
+}
+
+
 toggleSidebar.addEventListener('click', () => {
     // Toggle sidebar visibility
     const isVisible = !sidebar.classList.contains('-translate-x-full');
@@ -110,138 +144,138 @@ function hideAddServiceModal() {
 }
 
 // Add New Service Handler
-document.getElementById('addServiceForm').addEventListener('submit', async (e) => {
-    e.preventDefault(); // Prevent default form submission
+// document.getElementById('addServiceForm').addEventListener('submit', async (e) => {
+//     e.preventDefault(); // Prevent default form submission
 
-    const formData = new FormData();
+//     const formData = new FormData();
 
-    // Helper function to display validation error
-    const showValidationError = (message) => {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Validation Error',
-            text: message,
-        });
-    };
+//     // Helper function to display validation error
+//     const showValidationError = (message) => {
+//         Swal.fire({
+//             icon: 'warning',
+//             title: 'Validation Error',
+//             text: message,
+//         });
+//     };
 
-    // Collect available days
-    const availableDays = Array.from(
-        document.querySelectorAll('input[name="availableDays"]:checked')
-    ).map((checkbox) => checkbox.value);
-    if (availableDays.length === 0) {
-        return showValidationError('Please select at least one available day.');
-    }
-    formData.append('availableDays', JSON.stringify(availableDays));
+//     // Collect available days
+//     const availableDays = Array.from(
+//         document.querySelectorAll('input[name="availableDays"]:checked')
+//     ).map((checkbox) => checkbox.value);
+//     if (availableDays.length === 0) {
+//         return showValidationError('Please select at least one available day.');
+//     }
+//     formData.append('availableDays', JSON.stringify(availableDays));
 
-    // Collect service images
-    const serviceImages = document.getElementById('serviceImages').files;
-    if (serviceImages.length === 0) {
-        return showValidationError('Please upload at least one service image.');
-    }
-    Array.from(serviceImages).forEach((file) => {
-        formData.append('serviceImages', file);
-    });
+//     // Collect service images
+//     const serviceImages = document.getElementById('serviceImages').files;
+//     if (serviceImages.length === 0) {
+//         return showValidationError('Please upload at least one service image.');
+//     }
+//     Array.from(serviceImages).forEach((file) => {
+//         formData.append('serviceImages', file);
+//     });
 
-    // Collect and validate other form data
-    const title = document.getElementById('serviceTitle').value.trim();
-    if (!title) return showValidationError('Service title is required.');
-    formData.append('title', title);
+//     // Collect and validate other form data
+//     const title = document.getElementById('serviceTitle').value.trim();
+//     if (!title) return showValidationError('Service title is required.');
+//     formData.append('title', title);
 
-    const description = document.getElementById('serviceDescription').value.trim();
-    if (!description) return showValidationError('Service description is required.');
-    formData.append('description', description);
+//     const description = document.getElementById('serviceDescription').value.trim();
+//     if (!description) return showValidationError('Service description is required.');
+//     formData.append('description', description);
 
-    const categoryId = document.getElementById('serviceCategory').value;
-    if (!categoryId) return showValidationError('Please select a service category.');
-    formData.append('categoryId', categoryId);
+//     const categoryId = document.getElementById('serviceCategory').value;
+//     if (!categoryId) return showValidationError('Please select a service category.');
+//     formData.append('categoryId', categoryId);
 
-    const serviceArea = document.getElementById('serviceArea').value.trim();
-    if (!serviceArea) return showValidationError('Service area is required.');
-    formData.append('serviceArea', serviceArea);
+//     const serviceArea = document.getElementById('serviceArea').value.trim();
+//     if (!serviceArea) return showValidationError('Service area is required.');
+//     formData.append('serviceArea', serviceArea);
 
-    const location = document.getElementById('serviceLocation').value.trim();
-    if (!location) return showValidationError('Service location is required.');
-    formData.append('location', location);
+//     const location = document.getElementById('serviceLocation').value.trim();
+//     if (!location) return showValidationError('Service location is required.');
+//     formData.append('location', location);
 
-    const price = parseFloat(document.getElementById('servicePrice').value);
-    if (isNaN(price) || price <= 0) return showValidationError('Please enter a valid price.');
-    formData.append('price', price);
+//     const price = parseFloat(document.getElementById('servicePrice').value);
+//     if (isNaN(price) || price <= 0) return showValidationError('Please enter a valid price.');
+//     formData.append('price', price);
 
-    const priceType = document.getElementById('servicePriceType').value;
-    if (!priceType) return showValidationError('Please select a price type.');
-    formData.append('priceType', priceType);
+//     const priceType = document.getElementById('servicePriceType').value;
+//     if (!priceType) return showValidationError('Please select a price type.');
+//     formData.append('priceType', priceType);
 
-    const contactEmail = document.getElementById('contactEmail').value.trim();
-    if (!/\S+@\S+\.\S+/.test(contactEmail)) {
-        return showValidationError('Please enter a valid email address.');
-    }
-    formData.append('contactEmail', contactEmail);
+//     const contactEmail = document.getElementById('contactEmail').value.trim();
+//     if (!/\S+@\S+\.\S+/.test(contactEmail)) {
+//         return showValidationError('Please enter a valid email address.');
+//     }
+//     formData.append('contactEmail', contactEmail);
 
-    const contactNumber = document.getElementById('contactNumber').value.trim();
-    if (!/^\d{10,15}$/.test(contactNumber)) {
-        return showValidationError('Please enter a valid contact number.');
-    }
-    formData.append('contactNumber', contactNumber);
+//     const contactNumber = document.getElementById('contactNumber').value.trim();
+//     if (!/^\d{10,15}$/.test(contactNumber)) {
+//         return showValidationError('Please enter a valid contact number.');
+//     }
+//     formData.append('contactNumber', contactNumber);
 
-    const workingHoursStart = document.getElementById('workingHoursStart').value;
-    const workingHoursEnd = document.getElementById('workingHoursEnd').value;
-    if (!workingHoursStart || !workingHoursEnd) {
-        return showValidationError('Working hours start and end time are required.');
-    }
-    if (workingHoursStart >= workingHoursEnd) {
-        return showValidationError('Working hours start time must be before end time.');
-    }
-    formData.append('workingHoursStart', workingHoursStart);
-    formData.append('workingHoursEnd', workingHoursEnd);
+//     const workingHoursStart = document.getElementById('workingHoursStart').value;
+//     const workingHoursEnd = document.getElementById('workingHoursEnd').value;
+//     if (!workingHoursStart || !workingHoursEnd) {
+//         return showValidationError('Working hours start and end time are required.');
+//     }
+//     if (workingHoursStart >= workingHoursEnd) {
+//         return showValidationError('Working hours start time must be before end time.');
+//     }
+//     formData.append('workingHoursStart', workingHoursStart);
+//     formData.append('workingHoursEnd', workingHoursEnd);
 
-    var userData = localStorage.getItem('user');
-    var userDeatails = JSON.parse(userData);
-    const userId = userDeatails.id; // user id
-    formData.append('providerId', userId);
+//     var userData = localStorage.getItem('user');
+//     var userDeatails = JSON.parse(userData);
+//     const userId = userDeatails.id; // user id
+//     formData.append('providerId', userId);
 
-    try {
-        const response = await fetch('http://localhost:3000/api/service/add', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-            body: formData,
-        });
+//     try {
+//         const response = await fetch('http://localhost:3000/api/service/add', {
+//             method: 'POST',
+//             headers: {
+//                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
+//             },
+//             body: formData,
+//         });
 
-        if (response.ok) {
-            const result = await response.json();
-            Swal.fire({
-                icon: 'success',
-                title: 'Service Added',
-                text: result.message,
-            });
+//         if (response.ok) {
+//             const result = await response.json();
+//             Swal.fire({
+//                 icon: 'success',
+//                 title: 'Service Added',
+//                 text: result.message,
+//             });
 
-            // Hide the modal and reset the form
-            hideAddServiceModal();
-            e.target.reset();
+//             // Hide the modal and reset the form
+//             hideAddServiceModal();
+//             e.target.reset();
 
-            // Add a delay before reloading the page
-            setTimeout(() => {
-                console.log('Reloading after delay...');
-                window.location.reload(); // Reload the page after 2 seconds
-            }, 2000);
-        } else {
-            const error = await response.json();
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: error.message || 'Failed to add service',
-            });
-        }
-    } catch (error) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to communicate with the server',
-        });
-        console.error('Error:', error);
-    }
-});
+//             // Add a delay before reloading the page
+//             setTimeout(() => {
+//                 console.log('Reloading after delay...');
+//                 window.location.reload(); // Reload the page after 2 seconds
+//             }, 2000);
+//         } else {
+//             const error = await response.json();
+//             Swal.fire({
+//                 icon: 'error',
+//                 title: 'Error',
+//                 text: error.message || 'Failed to add service',
+//             });
+//         }
+//     } catch (error) {
+//         Swal.fire({
+//             icon: 'error',
+//             title: 'Error',
+//             text: 'Failed to communicate with the server',
+//         });
+//         console.error('Error:', error);
+//     }
+// });
 
 document.addEventListener('DOMContentLoaded', async () => {
     const userData = localStorage.getItem('user');
