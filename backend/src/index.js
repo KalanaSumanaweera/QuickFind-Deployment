@@ -18,6 +18,8 @@ const categoryRoutes = require('./routes/categories.routes');
 const providerDashboardRoutes = require('./routes/providerDashboard.route');
 const homePageRoutes = require("./routes/homePage.routes");
 const adminRoutes = require('./routes/admin.routes');
+const adminServiceRoutes = require('./routes/adminService.routes');
+
 
 // Import Sequelize associations
 require('./models/associations');
@@ -126,7 +128,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/providerDashboard', providerDashboardRoutes);
 app.use("/api/homepage", homePageRoutes);
 app.use('/api/admin', adminRoutes);
-
+app.use('/api/adminService', adminServiceRoutes);
 // Payhere proxy endpoint
 app.get('/success', (req, res) => {
     console.log('Payment successful');

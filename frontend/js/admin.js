@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function fetchPendingAds() {
     try {
-        const response = await fetch("/api/service/pending");
+        const response = await fetch("/api/adminService/pending");
         const ads = await response.json();
 
         const adsContainer = document.getElementById("adsContainer");
@@ -66,7 +66,7 @@ async function fetchPendingAds() {
         ads.forEach(ad => {
             const adCard = `
                 <div class="bg-white shadow-md rounded-lg overflow-hidden transform transition duration-300 hover:scale-105">
-                    <img src="${ad.imageUrls[0]}" alt="${ad.title}" class="w-full h-48 object-cover rounded-t-lg mb-4">
+                    <img src="../../${ad.imageUrls[0]}" alt="${ad.title}" class="w-full h-48 object-cover rounded-t-lg mb-4">
                     <div class="p-4">
                         <h4 class="font-bold text-primary mb-2">${ad.title}</h4>
                         <p class="text-sm text-gray-600 mb-4">${ad.location}</p>

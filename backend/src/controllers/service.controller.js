@@ -234,40 +234,40 @@ exports.updateService = async (req, res) => {
 };
 
 
-// Fetch all pending ads with images
-exports.getPendingAds = async (req, res) => {
-    try {
-        const pendingServices = await Service.findAll({
-            where: { status: "pending" }, // Correct: filter by 'status'
-            include: [
-                {
-                    model: ServiceImage,
-                    as: 'image',
-                    attributes: ['imageUrls'], // Fetch image URLs
-                },
-            ],
-            logging: console.log, // Log query to inspect SQL
-        });
+// // Fetch all pending ads with images
+// exports.getPendingAds = async (req, res) => {
+//     try {
+//         const pendingServices = await Service.findAll({
+//             where: { status: "pending" }, // Correct: filter by 'status'
+//             include: [
+//                 {
+//                     model: ServiceImage,
+//                     as: 'image',
+//                     attributes: ['imageUrls'], // Fetch image URLs
+//                 },
+//             ],
+//             logging: console.log, // Log query to inspect SQL
+//         });
 
-        const transformedServices = pendingServices.map(service => ({
-            id: service.id,
-            title: service.title,
-            description: service.description,
-            price: service.price,
-            priceType: service.priceType,
-            location: service.location,
-            serviceArea: service.serviceArea,
-            contactNumber: service.contactNumber,
-            contactEmail: service.contactEmail,
-            imageUrls: service.image ? service.image.imageUrls : [], // Conditional image URLs
-        }));
+//         const transformedServices = pendingServices.map(service => ({
+//             id: service.id,
+//             title: service.title,
+//             description: service.description,
+//             price: service.price,
+//             priceType: service.priceType,
+//             location: service.location,
+//             serviceArea: service.serviceArea,
+//             contactNumber: service.contactNumber,
+//             contactEmail: service.contactEmail,
+//             imageUrls: service.image ? service.image.imageUrls : [], // Conditional image URLs
+//         }));
 
-        res.status(200).json(transformedServices);
-    } catch (error) {
-        console.error('Error fetching pending ads:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-};
+//         res.status(200).json(transformedServices);
+//     } catch (error) {
+//         console.error('Error fetching pending ads:', error);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// };
 
 
 
