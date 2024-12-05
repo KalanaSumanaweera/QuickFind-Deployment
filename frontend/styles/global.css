@@ -93,3 +93,19 @@
     display: none;
   }
 }
+
+@media (min-width: 1024px) {
+  #toggleSidebarButton {
+      display: none;
+  }
+}
+
+/* Hide all sections by default */
+.admin-section {
+  display: none;
+}
+
+/* Show active section */
+.admin-section.active {
+  display: block;
+}

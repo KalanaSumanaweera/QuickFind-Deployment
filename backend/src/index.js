@@ -26,7 +26,7 @@ require('./models/associations');
 require('./config/passport')(passport);
 
 // Allowed origins for CORS
-const allowedOrigins = ['https://quickfind-38321514be2b.herokuapp.com','http://127.0.0.1:5501', 'http://127.0.0.1:5500', 'http://localhost:3000'];
+const allowedOrigins = ['https://quickfind-38321514be2b.herokuapp.com', 'http://127.0.0.1:5501', 'http://127.0.0.1:5500', 'http://localhost:3000'];
 
 const app = express();
 
@@ -62,6 +62,7 @@ app.use(
                     "https://sandbox.payhere.lk",
                     "https://www.google-analytics.com",
                     "https://maxcdn.bootstrapcdn.com",
+                    "https://cdnjs.cloudflare.com",  // Add this line
                     "'unsafe-inline'",
                     "https://sandbox.payhere.lk/pay/resources/js/jquery.min.js",
                     "https://sandbox.payhere.lk/pay/resources/js/common.js",
