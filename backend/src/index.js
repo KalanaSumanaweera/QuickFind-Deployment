@@ -122,6 +122,7 @@ const serviceRoutes = require('./routes/service.routes');
 const categoryRoutes = require('./routes/categories.routes');
 const providerDashboardRoutes = require('./routes/providerDashboard.route');
 const homePageRoutes = require("./routes/homePage.routes");
+const adminRoutes = require('./routes/admin.routes');
 
 // Import Sequelize associations
 require('./models/associations');
@@ -130,7 +131,7 @@ require('./models/associations');
 require('./config/passport')(passport);
 
 // Allowed origins for CORS
-const allowedOrigins = ['https://quickfind-38321514be2b.herokuapp.com', 'http://127.0.0.1:5500', 'http://localhost:3000'];
+const allowedOrigins = ['https://quickfind-38321514be2b.herokuapp.com','http://127.0.0.1:5501', 'http://127.0.0.1:5500', 'http://localhost:3000'];
 
 const app = express();
 
@@ -206,6 +207,7 @@ app.use('/api/service', serviceRoutes); // Service-related routes
 app.use('/api/categories', categoryRoutes); // Category-related routes
 app.use('/api/providerDashboard', providerDashboardRoutes);
 app.use("/api/homepage", homePageRoutes);
+app.use('/api/admin', adminRoutes);
 
 
 // 404 Handler for undefined routes

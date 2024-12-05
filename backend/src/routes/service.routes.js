@@ -1,6 +1,17 @@
 const express = require('express');
 const multer = require('multer');
-const { addService, getAllServices, deleteService, getServicesByProvider,editService,getServiceById, updateService } = require('../controllers/service.controller');
+const { verifyAdmin, verifyServiceProvider } = require('../middleware/auth.middleware');const { 
+    addService, 
+    getAllServices, 
+    deleteService, 
+    updateServiceStatus, 
+    getServicesByProvider, 
+    editService, 
+    getServiceById, 
+    updateService,
+    getPendingAds, 
+    updateAdStatus
+} = require('../controllers/service.controller');
 
 const router = express.Router();
 
@@ -22,6 +33,8 @@ router.delete('/:id', deleteService);
 router.get('/provider/:providerId', getServicesByProvider);
 router.get('/:serviceId', getServiceById);
 router.put('/:serviceId', upload.array('images', 5), updateService);
+router.get('/pending', getPendingAds);
+router.patch("/:id/status", updateAdStatus);
 
 
 

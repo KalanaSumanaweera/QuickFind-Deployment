@@ -117,11 +117,7 @@ document.getElementById('addServiceForm').addEventListener('submit', async (e) =
 
     // Helper function to display validation error
     const showValidationError = (message) => {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Validation Error',
-            text: message,
-        });
+        showAlert('warning', message);
     };
 
     // Collect available days
@@ -210,11 +206,7 @@ document.getElementById('addServiceForm').addEventListener('submit', async (e) =
 
         if (response.ok) {
             const result = await response.json();
-            Swal.fire({
-                icon: 'success',
-                title: 'Service Added',
-                text: result.message,
-            });
+            showAlert('done', result.message);
 
             // Hide the modal and reset the form
             hideAddServiceModal();
@@ -227,18 +219,10 @@ document.getElementById('addServiceForm').addEventListener('submit', async (e) =
             }, 2000);
         } else {
             const error = await response.json();
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: error.message || 'Failed to add service',
-            });
+            showAlert('error', error.message || 'Failed to add service');
         }
     } catch (error) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to communicate with the server',
-        });
+        showAlert('error', 'Failed to communicate with the server');
         console.error('Error:', error);
     }
 });
@@ -375,7 +359,7 @@ document.getElementById('editServiceForm').addEventListener('submit', async (e) 
 
     // Validate image count
     if (totalImages > 5) {
-        Swal.fire('Error', 'You can only have up to 5 images.', 'error');
+        showAlert('warning', 'You can only have up to 5 images!')
         return;
     }
 
@@ -401,12 +385,15 @@ document.getElementById('editServiceForm').addEventListener('submit', async (e) 
         });
 
         if (response.ok) {
-            Swal.fire('Success', 'Service updated successfully', 'success');
-            closeEditServiceModal();
-            location.reload();
+            showAlert('done', 'Service updated successfully!').then(() => {
+                closeEditServiceModal();
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+            });
         } else {
             const error = await response.json();
-            Swal.fire('Error', error.message || 'Failed to update service', 'error');
+           showAlert('Error', error.message || 'Failed to update service');
         }
     } catch (error) {
         console.error('Error updating service:', error);
@@ -415,25 +402,27 @@ document.getElementById('editServiceForm').addEventListener('submit', async (e) 
 
 
 function deleteService(serviceId) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: 'You won’t be able to revert this!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
-    }).then(async (result) => {
-        if (result.isConfirmed) {
+    showAlert('question', 'Are you sure? You won’t be able to revert this!', ['delete', 'cancel'])
+    .then(async (action) => {
+        if (action === 'delete') {
+            console.log('Delete button clicked.');
+            
             const response = await fetch(`http://localhost:3000/api/service/${serviceId}`, {
                 method: 'DELETE',
             });
 
             if (response.ok) {
-                Swal.fire('Deleted!', 'Service has been deleted.', 'success');
+                await showAlert('done', 'Service has been deleted!');
                 location.reload();
             } else {
-                Swal.fire('Error', 'Failed to delete service', 'error');
+                await showAlert('error', 'Failed to delete service!');
             }
+        } else if (action === 'cancel') {
+            console.log('Cancel button clicked.');
         }
+    })
+    .catch((error) => {
+        console.error('An error occurred:', error);
     });
 }
 

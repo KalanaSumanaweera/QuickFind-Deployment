@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - QuickFind.LK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../../js/tailwind-config.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <style>
+        @media (min-width: 1024px) {
+            #toggleSidebarButton {
+                display: none;
+            }
+        }
+
+        /* Hide all sections by default */
+        .admin-section {
+            display: none;
+        }
+
+        /* Show active section */
+        .admin-section.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+    <div class="min-h-screen flex">
+        <!-- Sidebar -->
+        <aside
+            class="w-64 bg-primary text-white fixed inset-y-0 z-20 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"
+            id="sidebar">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold mb-4">Admin Panel</h1>
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="w-12 h-12 bg-primary-light rounded-full flex items-center justify-center">
+                        <i class="fas fa-user-crown"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium">Admin Name</p>
+                        <p class="text-sm text-gray-300">Administrator</p>
+                    </div>
+                </div>
+                <nav>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="#" class="flex items-center p-3 rounded hover:bg-primary-light"
+                                data-section="dashboard">
+                                <i class="fas fa-home w-6"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="flex items-center p-3 rounded hover:bg-primary-light"
+                                data-section="users">
+                                <i class="fas fa-users w-6"></i>
+                                <span>Manage Users</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="flex items-center p-3 rounded hover:bg-primary-light" data-section="ads">
+                                <i class="fas fa-list w-6"></i>
+                                <span>Manage Ads</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="flex items-center p-3 rounded hover:bg-primary-light"
+                                data-section="categories">
+                                <i class="fas fa-tags w-6"></i>
+                                <span>Manage Categories</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="flex items-center p-3 rounded hover:bg-primary-light"
+                                data-section="reviews">
+                                <i class="fas fa-comment-dots w-6"></i>
+                                <span>Moderate Reviews</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="flex items-center p-3 rounded hover:bg-primary-light"
+                                data-section="reports">
+                                <i class="fas fa-chart-line w-6"></i>
+                                <span>Reports</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="p-6 mt-auto">
+                <button onclick="logout()" class="w-full flex items-center p-3 rounded hover:bg-primary-light">
+                    <i class="fas fa-sign-out-alt w-6"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Toggle Button for Mobile -->
+        <button class="fixed top-4 left-4 bg-primary text-white p-2 rounded lg:hidden" id="toggleSidebarButton">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Main Content -->
+        <main class="flex-1 lg:ml-64 p-6">
+            <header class="flex justify-between items-center bg-white p-4 shadow-sm rounded mb-6">
+                <h2 class="text-xl font-bold" id="sectionTitle">Admin Dashboard</h2>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 rounded-full hover:bg-gray-100">
+                        <i class="fas fa-bell text-gray-600"></i>
+                    </button>
+                    <button class="p-2 rounded-full hover:bg-gray-100">
+                        <i class="fas fa-cog text-gray-600"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Section: Dashboard -->
+            <section id="dashboard" class="admin-section active">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-gray-500">Total Users</h3>
+                        <p class="text-3xl font-bold">1,234</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-gray-500">Active Ads</h3>
+                        <p class="text-3xl font-bold">567</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-gray-500">Pending Reviews</h3>
+                        <p class="text-3xl font-bold">23</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-gray-500">Reports</h3>
+                        <p class="text-3xl font-bold">5</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Users -->
+            <section id="users" class="admin-section">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold">Manage Users</h3>
+                    <p class="text-gray-500 mb-4">View, edit, or suspend user accounts.</p>
+                    <!-- User management content -->
+                </div>
+            </section>
+
+
+            <!-- Section: Ads -->
+            <section id="ads" class="admin-section">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold">Manage Ads</h3>
+                    <p class="text-gray-500 mb-4">Approve or reject pending ads.</p>
+                    <div id="adsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </div>
+            </section>
+
+            <!-- Modal for Viewing Ad Details -->
+            <div id="adDetailsModal"
+                class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+                <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl">
+                    <h3 id="modalTitle" class="text-xl font-bold mb-4">Ad Details</h3>
+                    <p id="modalDescription" class="text-gray-700 mb-4"></p>
+                    <ul id="modalDetails" class="text-gray-600 mb-4">
+                        <!-- Details will be dynamically added -->
+                    </ul>
+                    <div class="text-right">
+                        <button onclick="closeModal()"
+                            class="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-700">Close</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Section: Categories -->
+            <section id="categories" class="admin-section">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold">Manage Categories</h3>
+                    <p class="text-gray-500 mb-4">Add, edit, or delete ad categories.</p>
+                    <!-- Category management content -->
+                </div>
+            </section>
+
+            <!-- Section: Reviews -->
+            <section id="reviews" class="admin-section">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold">Moderate Reviews</h3>
+                    <p class="text-gray-500 mb-4">Review flagged reviews for inappropriate content.</p>
+                    <!-- Review moderation content -->
+                </div>
+            </section>
+
+            <!-- Section: Reports -->
+            <section id="reports" class="admin-section">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold">Reports</h3>
+                    <p class="text-gray-500 mb-4">View system and user activity reports.</p>
+                    <!-- Reports content -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../js/admin.js"></script>
+</body>
+
+</html>
