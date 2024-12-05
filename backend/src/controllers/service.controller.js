@@ -234,29 +234,32 @@ exports.updateService = async (req, res) => {
 };
 
 
-// Fetch all pending ads
+// Fetch all pending ads with images
 exports.getPendingAds = async (req, res) => {
     try {
         const pendingServices = await Service.findAll({
-            where: { status: 'active' },
+            where: { status: "pending" }, // Correct: filter by 'status'
             include: [
                 {
                     model: ServiceImage,
                     as: 'image',
-                    attributes: ['imageUrls'],
+                    attributes: ['imageUrls'], // Fetch image URLs
                 },
             ],
-            logging: console.log, // Log the generated SQL query
+            logging: console.log, // Log query to inspect SQL
         });
-        
 
-        // Transform the data for frontend
         const transformedServices = pendingServices.map(service => ({
             id: service.id,
             title: service.title,
+            description: service.description,
             price: service.price,
+            priceType: service.priceType,
             location: service.location,
-            imageUrls: service.image ? service.image.imageUrls : [], // Include image URLs if available
+            serviceArea: service.serviceArea,
+            contactNumber: service.contactNumber,
+            contactEmail: service.contactEmail,
+            imageUrls: service.image ? service.image.imageUrls : [], // Conditional image URLs
         }));
 
         res.status(200).json(transformedServices);
@@ -265,6 +268,8 @@ exports.getPendingAds = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+
 
 
 // Update ad status
