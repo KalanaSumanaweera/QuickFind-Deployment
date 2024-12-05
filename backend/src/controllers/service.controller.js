@@ -1,6 +1,23 @@
-const Service = require('../models/service.model');
-const ServiceImage = require('../models/serviceImage.model');
+// const Service = require('../models/service.model');
+// const Category = require('../models/category.model');
+// const ServiceImage = require('../models/serviceImage.model');
 const { Op } = require('sequelize');
+const { 
+    User, 
+    Service, 
+    ServiceImage, 
+    Category, 
+    Review, 
+    Transaction, 
+    Booking, 
+    Notification, 
+    Rating, 
+    Admin, 
+    Message, 
+    Favourite 
+} = require('../models/associations');
+
+
 
 // Create a new service
 exports.addService = async (req, res) => {
@@ -86,12 +103,12 @@ exports.getServicesByProvider = async (req, res) => {
             include: [
                 {
                     model: require('../models/category.model'),
-                    attributes: ['name'], 
+                    attributes: ['name'],
                 },
                 {
-                    model: require('../models/serviceImage.model'), 
-                    as: 'image', 
-                    attributes: ['id', 'imageUrls'], 
+                    model: require('../models/serviceImage.model'),
+                    as: 'image',
+                    attributes: ['id', 'imageUrls'],
                 },
             ],
         });
@@ -215,3 +232,58 @@ exports.updateService = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+
+// Fetch all pending ads
+exports.getPendingAds = async (req, res) => {
+    try {
+        const pendingServices = await Service.findAll({
+            where: { status: 'active' },
+            include: [
+                {
+                    model: ServiceImage,
+                    as: 'image',
+                    attributes: ['imageUrls'],
+                },
+            ],
+            logging: console.log, // Log the generated SQL query
+        });
+        
+
+        // Transform the data for frontend
+        const transformedServices = pendingServices.map(service => ({
+            id: service.id,
+            title: service.title,
+            price: service.price,
+            location: service.location,
+            imageUrls: service.image ? service.image.imageUrls : [], // Include image URLs if available
+        }));
+
+        res.status(200).json(transformedServices);
+    } catch (error) {
+        console.error('Error fetching pending ads:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
+// Update ad status
+exports.updateAdStatus = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    try {
+        const ad = await Service.findByPk(id);
+
+        if (!ad) {
+            return res.status(404).json({ message: "Ad not found." });
+        }
+
+        ad.status = status;
+        await ad.save();
+        res.json({ message: "Ad status updated successfully." });
+    } catch (error) {
+        console.error("Error updating ad status:", error);
+        res.status(500).json({ message: "Internal server error." });
+    }
+}

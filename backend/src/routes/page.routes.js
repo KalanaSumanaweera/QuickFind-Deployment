@@ -2,16 +2,20 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 
+router.get('/adminloginpage', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../../frontend/pages/admin/adminLogin.html')); 
+});
 
-// Serve login.html
+router.get('/admin/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../../frontend/pages/admin/adminPanel.html')); 
+});
+
 router.get('/loginpage', (req, res) => {
     res.sendFile(path.join(__dirname, '../../../frontend/pages/auth/login.html')); 
 });
 
-// Serve provider-dashboard.html 
 router.get('/provider-dashboard', (req, res) => {
-    // res.sendFile(path.join(__dirname, '../../../frontend/pages/provider-dashboard.html'));
-    res.sendFile(path.join(__dirname, '../../../frontend/pages/provider-dashboard.html')); //this is the development forntend
+    res.sendFile(path.join(__dirname, '../../../frontend/pages/provider-dashboard.html')); 
 });
 
 router.get('/signuppage', (req, res) => {
