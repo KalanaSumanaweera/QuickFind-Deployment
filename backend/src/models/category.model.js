@@ -16,10 +16,10 @@ const Category = sequelize.define('Category', {
         type: DataTypes.TEXT,
         allowNull: true
     },
-    photoUrl: {  // New field for the image URL
-        type: DataTypes.STRING,
-        allowNull: true
-    }
+    // photoUrl: {  // New field for the image URL
+    //     type: DataTypes.STRING,
+    //     allowNull: true
+    // }
 }, { timestamps: false });
 
 module.exports = Category;

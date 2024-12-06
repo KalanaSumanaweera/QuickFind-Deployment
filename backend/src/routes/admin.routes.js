@@ -3,7 +3,6 @@ const router = express.Router();
 const adminController = require('../controllers/admin.controller');
 
 
-
 // Admin login route
 router.post("/login", adminController.adminLogin);
 
@@ -21,8 +20,6 @@ router.delete('/ads/:id', adminController.deleteAd);
 // Categories
 router.get('/categories', adminController.getAllCategories);
 router.post('/categories', adminController.addCategory);
-router.put('/categories/:id', adminController.updateCategory);
-router.delete('/categories/:id', adminController.deleteCategory);
 
 // Reviews
 router.get('/reviews', adminController.getFlaggedReviews);

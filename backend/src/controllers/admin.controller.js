@@ -2,6 +2,36 @@ const db = require('../models/associations'); // Import database models
 const Report = require('../models/report.model');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Sequelize = require('sequelize');
+const fs = require('fs');
+const path = require('path');
+const multer = require('multer');
+
+
+
+
+// Configure Multer for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'frontend/icons'); // Save icons in the public/icons folder
+    },
+    filename: (req, file, cb) => {
+        const categoryName = req.body.name.toLowerCase().replace(/\s+/g, '_');
+        cb(null, `${categoryName}.png`); // Save file as category_name.png
+    }
+});
+
+const upload = multer({
+    storage,
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype === 'image/png') {
+            cb(null, true); // Accept PNG files
+        } else {
+            cb(new Error('Only PNG files are allowed.'));
+        }
+    }
+}).single('icon');
+
 
 // Admin login
 exports.adminLogin = async (req, res) => {
@@ -102,21 +132,62 @@ exports.getAllCategories = async (req, res) => {
         const categories = await db.Category.findAll();
         res.json(categories);
     } catch (error) {
-        console.error(error);
+        console.error('Error fetching categories:', error);
         res.status(500).json({ message: 'Failed to fetch categories' });
     }
 };
 
 exports.addCategory = async (req, res) => {
-    try {
-        const { name } = req.body;
-        const category = await db.Category.create({ name });
-        res.json({ message: 'Category added successfully', category });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Failed to add category' });
-    }
+    // Handle file upload first
+    upload(req, res, async (err) => {
+        if (err) {
+            return res.status(400).json({ message: err.message });
+        }
+
+        const { name, description } = req.body;
+
+        try {
+            // Check if the category already exists (case-insensitive)
+            const existingCategory = await db.Category.findOne({
+                where: Sequelize.where(
+                    Sequelize.fn('LOWER', Sequelize.col('name')),
+                    name.toLowerCase()
+                )
+            });
+
+            if (existingCategory) {
+                // Remove the uploaded file if category already exists
+                if (req.file) {
+                    const filePath = path.join('frontend/icons', `${name.toLowerCase().replace(/\s+/g, '_')}.png`);
+                    if (fs.existsSync(filePath)) {
+                        fs.unlinkSync(filePath);
+                    }
+                }
+                return res.status(400).json({ message: 'Category already exists.' });
+            }
+
+            // Create the category
+            const category = await db.Category.create({ name, description });
+
+            // Send success response
+            res.status(201).json({ message: 'Category created successfully.', category });
+        } catch (error) {
+            console.error('Error creating category:', error);
+
+            // Cleanup the uploaded file in case of errors
+            if (req.file) {
+                const filePath = path.join('frontend/icons', `${name.toLowerCase().replace(/\s+/g, '_')}.png`);
+                if (fs.existsSync(filePath)) {
+                    fs.unlinkSync(filePath);
+                }
+            }
+
+            res.status(500).json({ message: 'Failed to create category.' });
+        }
+    });
 };
+
+
 
 exports.updateCategory = async (req, res) => {
     try {

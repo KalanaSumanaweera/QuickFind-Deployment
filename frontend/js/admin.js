@@ -132,3 +132,93 @@ function closeModal() {
     document.getElementById("adDetailsModal").classList.add("hidden");
 }
 
+async function loadCategories() {
+    try {
+        const response = await fetch('/api/admin/categories');
+        const categories = await response.json();
+
+        const categoriesContainer = document.getElementById('categoriesContainer');
+        categoriesContainer.innerHTML = '';
+
+        categories.forEach(category => {
+            const categoryCard = `
+                <div class="flex items-center bg-gray-100 p-4 rounded-lg shadow-sm">
+                    <img src="/icons/${category.name.toLowerCase()}.png" alt="${category.name}" class="w-16 h-16 mr-4">
+                    <div>
+                        <h4 class="font-bold text-gray-800">${category.name}</h4>
+                        <p class="text-sm text-gray-600">${category.description || 'No description available'}</p>
+                    </div>
+                </div>
+            `;
+            categoriesContainer.innerHTML += categoryCard;
+        });
+    } catch (error) {
+        console.error('Error loading categories:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const openModalButton = document.getElementById('openAddCategoryModalButton'); // Button to open modal
+    const closeModalButton = document.getElementById('closeAddCategoryModalButton'); // Button to close modal
+    const overlay = document.getElementById('modalOverlay'); // Optional: overlay click to close
+
+    if (openModalButton) {
+        openModalButton.addEventListener('click', openAddCategoryModal);
+    }
+
+    if (closeModalButton) {
+        closeModalButton.addEventListener('click', closeAddCategoryModal);
+    }
+
+    // Close modal when clicking on overlay
+    if (overlay) {
+        overlay.addEventListener('click', closeAddCategoryModal);
+    }
+});
+
+
+async function addCategory(event) {
+    event.preventDefault();
+
+    const formData = new FormData();
+    const name = document.getElementById('categoryName').value.trim();
+    const description = document.getElementById('categoryDescription').value.trim();
+    const icon = document.getElementById('categoryIcon').files[0];
+
+    if (!name || !icon) return alert('Category name and icon are required.');
+
+    formData.append('name', name);
+    formData.append('description', description);
+    formData.append('icon', icon);
+
+    try {
+        const response = await fetch('/api/admin/categories', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            closeAddCategoryModal();
+            loadCategories();
+        } else {
+            const error = await response.json();
+            alert(error.message || 'Failed to add category.');
+        }
+    } catch (error) {
+        console.error('Error adding category:', error);
+    }
+}
+
+// Event Listener
+document.getElementById('addCategoryForm').addEventListener('submit', addCategory);
+
+// Load categories on page load
+window.addEventListener('DOMContentLoaded', loadCategories);
+
+function openAddCategoryModal() {
+    document.getElementById('addCategoryModal').classList.remove('hidden');
+}
+
+function closeAddCategoryModal() {
+    document.getElementById('addCategoryModal').classList.add('hidden');
+}

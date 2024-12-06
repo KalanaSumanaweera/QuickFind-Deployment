@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 
+router.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../../frontend/pages/auth/index.html')); 
+});
+
 router.get('/adminloginpage', (req, res) => {
     res.sendFile(path.join(__dirname, '../../../frontend/pages/admin/adminLogin.html')); 
 });
