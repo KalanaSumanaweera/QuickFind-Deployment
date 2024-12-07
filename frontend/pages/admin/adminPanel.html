@@ -75,17 +75,14 @@
                 </nav>
             </div>
             <div class="p-6 mt-auto">
-                <button onclick="logout()" class="w-full flex items-center p-3 rounded hover:bg-primary-light">
+                <button id="logoutButton" class="w-full flex items-center p-3 rounded hover:bg-primary-light">
                     <i class="fas fa-sign-out-alt w-6"></i>
                     <span>Logout</span>
                 </button>
             </div>
         </aside>
 
-        <!-- Toggle Button for Mobile -->
-        <button class="fixed top-4 left-4 bg-primary text-white p-2 rounded lg:hidden" id="toggleSidebarButton">
-            <i class="fas fa-bars"></i>
-        </button>
+ 
 
         <!-- Main Content -->
         <main class="flex-1 lg:ml-64 p-6">
@@ -98,30 +95,19 @@
                     <button class="p-2 rounded-full hover:bg-gray-100">
                         <i class="fas fa-cog text-gray-600"></i>
                     </button>
+                    <button class="p-2 rounded-full hover:bg-gray-100 lg:hidden" id="toggleSidebarButton">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
                 </div>
             </header>
 
             <!-- Section: Dashboard -->
             <section id="dashboard" class="admin-section active">
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-gray-500">Total Users</h3>
-                        <p class="text-3xl font-bold">1,234</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-gray-500">Active Ads</h3>
-                        <p class="text-3xl font-bold">567</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-gray-500">Pending Reviews</h3>
-                        <p class="text-3xl font-bold">23</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-gray-500">Reports</h3>
-                        <p class="text-3xl font-bold">5</p>
-                    </div>
+                    <!-- Dynamic content will be injected here -->
                 </div>
             </section>
+
 
             <!-- Section: Users -->
             <section id="users" class="admin-section">
@@ -143,35 +129,43 @@
             </section>
 
             <!-- Modal for Viewing Ad Details -->
-            <div id="adDetailsModal"
-                class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+            <div id="adDetailsModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
                 <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl">
                     <h3 id="modalTitle" class="text-xl font-bold mb-4">Ad Details</h3>
+                    <div id="modalImages" class="mb-4 flex flex-wrap gap-2">
+                        <!-- Images will be dynamically added here -->
+                    </div>
                     <p id="modalDescription" class="text-gray-700 mb-4"></p>
                     <ul id="modalDetails" class="text-gray-600 mb-4">
                         <!-- Details will be dynamically added -->
                     </ul>
                     <div class="text-right">
-                        <button onclick="closeModal()"
-                            class="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-700">Close</button>
+                        <button id="closeModalButton" class="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-700">
+                            Close
+                        </button>
                     </div>
                 </div>
             </div>
+            
+        
 
 
             <!-- Section: Categories -->
             <section id="categories" class="admin-section">
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-xl font-bold mb-4">Manage Categories</h3>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold">Manage Categories</h3>
+                        <button id="openAddCategoryModalButton" 
+                            class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
+                            Add New Category
+                        </button>
+                    </div>
                     <div id="categoriesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <!-- Categories will be loaded here -->
                     </div>
-                    <button id="openAddCategoryModalButton"
-                        class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
-                        Add New Category
-                    </button>
                 </div>
             </section>
+            
 
             <!-- Add Category Modal -->
             <div id="addCategoryModal"
